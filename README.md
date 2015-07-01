@@ -6,7 +6,7 @@ This was a app our group at the udel hackathon attempted to do in October 2014. 
 Original Project : https://github.com/keithyong/too-lazy
 
 #ToDO:
-*Set up posts and comments, to routes by ID
+Set up posts and comments, to routes by ID
 
 Example : 
   app.get('/toolazy/:posts) {
@@ -14,9 +14,9 @@ Example :
       //render file here that displays post
       });
 
-*Create a upvote system for posts and comments
-*Create a commenting system, allow users to reply, have nested comments
-*allow only @udel.edu users to join/signup
-*Use new release of Reactjs
-*try to webpack this
-*Implement alloy editor for commenting rather than text area
+Create a upvote system for posts and comments
+Create a commenting system, allow users to reply, have nested comments
+Allow only @udel.edu users to join/signup
+Use new release of Reactjs
+Try to webpack this
+Implement alloy editor for commenting rather than text area
