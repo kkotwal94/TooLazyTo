@@ -5,19 +5,19 @@ var bcrypt = require('bcrypt-nodejs');
 //define the schema for our users
 
 var userSchema = mongoose.Schema({
-    
+    local            : {
         email        : String,
         password     : String,
         firstName    : String, 
         lastName     : String,
         dob          : String,
-        schoolYear   : Number,
+        schoolYear   : String,
         posts        : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
         comments     : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
         upvotes      : { type: Number, default: 0 },
-        upvoted      : { type: Number, default: 0 },
-           
-   
+        karma        : { type: Number, default: 0 },
+        title        : { type: String, default: "Superhero in Training" }
+    }
 });
 
 //methods

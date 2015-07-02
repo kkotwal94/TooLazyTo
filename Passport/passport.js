@@ -50,12 +50,12 @@ module.exports = function (passport) {
                     var newUser = new User();
                     
                     
-                    newUser.email = email;
-                    newUser.firstName = "Need to set";
-                    newUser.lastName = "Need to set";
-                    newUser.password = newUser.generateHash(password);
-                    newUser.dob = "MM/DD/YYYY";
-                    newUser.schoolYear = "MM/DD/YYYY";
+                    newUser.local.email = email;
+                    newUser.local.firstName = "Need to set";
+                    newUser.local.lastName = "Need to set";
+                    newUser.local.password = newUser.generateHash(password);
+                    newUser.local.dob = "MM/DD/YYYY";
+                    newUser.local.schoolYear = "Fresh/Soph/Junior/Senior";
 
                     
                     

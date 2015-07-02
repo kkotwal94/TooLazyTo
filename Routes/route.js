@@ -5,14 +5,40 @@
     require('../Schema/Posts.js');
     var Post = mongoose.model('Post');
     var Comment = mongoose.model('Comment');
-   
     
     
-   
-   app.get('/', function (req, res) {
-        res.render('index.ejs'); //load the index.ejs file
+    
+    
+    app.get('/', function (req, res) {
+        res.render('index.ejs', {
+            message: req.flash('loginMessage'),
+            smessage : req.flash('signupMessage'),
+            user     : req.user
+        }); //load the index.ejs file
     });
     
+    
+    //app/post ('/login', do all our passport stuff here)
+    
+    app.post('/login', passport.authenticate('local-login', {
+        successRedirect : '/', //redirect to the secure profile section
+        failureRedirect : '/', //redirect back to the signup page
+        failureFlash : true //allow flash messages
+    })
+    );
+
+    app.post('/signup', passport.authenticate('local-signup', {
+        successRedirect : '/', //redirect to profile
+        failureRedirect : '/' , //redirect back to the signup page
+        failureFlash : true //allow flash messages
+    })
+    );
+
+    app.get('/logout', function (req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+
 };
 
 

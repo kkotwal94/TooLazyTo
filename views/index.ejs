@@ -1,7 +1,330 @@
-﻿<html>
-   <head>
-   </head>
-   <body>
-		<p>Sup, we're live!!</p>
-   </body>
+﻿<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Too Lazy To...</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="views/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="views/css/simple-sidebar.css" rel="stylesheet">
+
+
+	    
+		<link rel="stylesheet" type="text/css" href="views/css/component.css" />
+		
+		<script src="views/js/modernizr.custom.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<style>
+	h1, h4, #signin {
+	margin : 0;
+	padding : 0;
+	display: inline;
+	}
+
+	#signin {
+	float: right;
+	}
+
+	#hot, #rising, #nolove {
+	padding-top: 20px;
+	}
+
+	button {
+	border: none;
+	padding: 0.6em 1.2em;
+	background: #c0392b;
+	color: #fff;
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+	font-size: 1em;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	cursor: pointer;
+	display: inline-block;
+	margin: 3px 2px;
+	border-radius: 2px;
+
+	
+}
+
+button:hover {
+	background: #A5281B;
+}
+	</style>
+</head>
+
+<body>
+	<!-- Modal Background -->
+		
+	<!-- All modals added here for the demo. You would of course just have one, dynamically created -->
+		<div class="md-modal md-effect-1" id="modal-1">
+			<div class="md-content">
+				<h3>Profile</h3>
+				<div>
+					<p>Insert Profile React component here!</p>
+					<button class="md-close">Close me!</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="md-modal md-effect-1" id="modal-2">
+			<div class="md-content">
+				<h3>Signup</h3>
+				<div>
+				<div>
+				 <!-- Signup Form -->
+		<form action = "/signup" method = "post">
+			<div class = "form-group">
+			<label>Udel Email</label>
+			<input type="text" class = "form-control" placeholder="Username" name = "email">
+			</div>
+			<div class = "form-group">
+			<label>Set Password</label>
+			<input type="password" class = "form-control" placeholder="Password" name = "password">
+			</div>
+			<button type="submit" id="login-button">Signup</button>
+		</form>
+				</div>
+					<p>Insert Signup React component here!</p>
+					<button class="md-close">Close me!</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="md-modal md-effect-1" id="modal-3">
+			<div class="md-content">
+				<h3>Login</h3>
+				<div>
+				<!-- Form div -->
+				<div>
+				<form action ="/login" method="post">
+					<div class ="form-group">
+						<label>Udel Email</label>
+						<input type="text" class ="form-control" name="email">
+					</div>
+					<div class = "form-group">
+						<label>Password</label>
+						<input type ="password" class="form-control" name="password">
+					</div>
+					<button type="submit" class="btn btn-warning btn-lg">Login</button>
+				</form>
+				<!-- Login form ends -->
+					</div>
+					<p>Insert Login React component here!</p>
+					<button class="md-close">Close me!</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="md-modal md-effect-1" id="modal-4">
+			<div class="md-content">
+				<h3>Create a new post!</h3>
+				<div>
+					<p>Insert Post React component here!</p>
+					<button class="md-close">Close me!</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="md-modal md-effect-1" id="modal-5">
+			<div class="md-content">
+				<h3>Search the posts/threads</h3>
+				<div>
+					<p>Insert Search React component here!</p>
+					<button class="md-close">Close me!</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="md-modal md-effect-1" id="modal-6">
+			<div class="md-content">
+				<h3>What this is about!</h3>
+				<div>
+					<p>Too Lazy To... is a app created to have people exchange favors with each other, whether its through money or other favors itself, like a oncampus craigslist, except you have rep. So don't lose your street cred by forgetting to hold up your end of the bargain. Really, you dont have to ask for anything either, a true hero would do some things for free!</p>
+					<button class="md-close">Close me!</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="md-modal md-effect-1" id="modal-7">
+			<div class="md-content">
+				<h3>Search the posts/threads</h3>
+				<div>
+					<ol>
+					<li>Well create a account first! Look to the top right!</li>
+					<li>Start making posts by hitting "POSTS!"</li>
+					<li>Do favors for others or reward and compensate well to raise your karma</li>
+					<li>Earn some street cred man, we're just here to do good things</li>
+					</ol>
+					<button class="md-close">Close me!</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- End of Modals -->
+
+
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                       <button class = "md-trigger btn btn-primary" data-modal="modal-4">Post!</button>
+                    </a>
+                </li>
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a class="md-trigger" id = "hi" data-modal="modal-5">Search</a>
+                </li>
+                <li>
+                    <a class="md-trigger" id = "hi" data-modal="modal-1">Profile</a>
+                </li>
+                <li>
+                    <a class="md-trigger" id = "hi" data-modal="modal-6">About</a>
+                </li>
+                <li>
+                    <a href="https://github.com/kkotwal94/TooLazyTo">Code</a>
+                </li>
+				<li>
+				<a class="md-trigger" id = "hi" data-modal="modal-7">How do I use this?</a>
+				
+				</li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+					<div>
+                        <h1 >Too Lazy To..</h1>
+						<!-- Insert react component in signin -->
+						<% if (user != null) { %>
+						<div id = "signin">
+						<h4>Hello <%= user.local.email%>(<%= user.local.karma %>) | 
+						<a href = "/logout">Logout</a>
+						<% } %>
+						
+						<% if(user == null) { %>
+						<div id = "signin">
+						<h4 ><a class="md-trigger" data-modal="modal-2">Sign up</a>
+						or
+						<a class="md-trigger" data-modal="modal-3">Log in</a></h4>
+						</div>
+						<% } %>
+				   </div>
+
+				   <hr/>
+				
+				   <% if (message.length > 0) { %>
+     <div class="alert alert-danger" role="alert"><%= message %></div>
+     <% } %>
+
+	 <% if (smessage.length > 0) { %>
+     <div class="alert alert-danger" role="alert"><%= smessage %></div>
+     <% } %>
+						
+
+						<div>
+						<!-- Navigation tabbing -->
+						<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active"><a href="#hot" aria-controls="home" role="tab" data-toggle="tab">Hot</a></li>
+						<li role="presentation"><a href="#rising" aria-controls="profile" role="tab" data-toggle="tab">Rising</a></li>
+						<li role="presentation"><a href="#nolove" aria-controls="profile" role="tab" data-toggle="tab">No Love..</a></li>
+						</ul>
+						<!-- Ended navigation tabbing -->
+						  <!-- Tab panes -->
+                        <div class="tab-content">
+							<div role="tabpanel" class="tab-pane fade in active" id="hot">...HOT Fiyah!</div>
+							<div role="tabpanel" class="tab-pane fade" id="rising">...Rising</div>
+							<div role="tabpanel" class="tab-pane fade" id="nolove">...No Love THO</div>
+    
+						</div>
+                        </p>
+						</p>
+						</p>
+                        <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+		
+		
+    </div>
+    <!-- /#wrapper -->
+	<div class="md-overlay"></div><!-- the overlay element -->
+	
+	     
+		<!-- classie.js by @desandro: https://github.com/desandro/classie -->
+		<script src="views/js/classie.js"></script>
+		<script src="views/js/modalEffects.js"></script>
+
+		<!-- for the blur effect -->
+		<!-- by @derSchepp https://github.com/Schepp/CSS-Filters-Polyfill -->
+		<script>
+			// this is important for IEs
+			var polyfilter_scriptpath = '/js/';
+		</script>
+		<script src="views/js/cssParser.js"></script>
+		<script src="views/js/css-filters-polyfill.js"></script>
+    <!-- jQuery -->
+    <script src="views/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="views/js/bootstrap.min.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+	
+	$(".md-trigger").click(function(e) {
+	
+	e.preventDefault();
+	$(".md-overlay").css("opacity", "1");
+	$(".md-overlay").css("visibility", "visible");
+	
+	});
+
+	$(".md-overlay").click(function(e) {
+	
+	e.preventDefault();
+	$(".md-overlay").css("opacity", "0");
+	$(".md-overlay").css("visibility", "hidden");
+	
+	});
+
+	$(".md-close").click(function(e) {
+	
+	e.preventDefault();
+	$(".md-overlay").css("opacity", "0");
+	$(".md-overlay").css("visibility", "hidden");
+	
+	});
+	
+    </script>
+
+</body>
+
 </html>
