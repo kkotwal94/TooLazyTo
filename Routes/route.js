@@ -5,7 +5,7 @@
     require('../Schema/Posts.js');
     var Post = mongoose.model('Post');
     var Comment = mongoose.model('Comment');
-    
+    var User = mongoose.model('User');
     
     
     
@@ -37,6 +37,27 @@
     app.get('/logout', function (req, res) {
         req.logout();
         res.redirect('/');
+    });
+
+    app.post('/posts', isLoggedIn, function (req, res) {
+        console.log(req.body);
+        var posts = new Post(req.body);
+        console.log(posts);
+        posts.save();
+       
+        User.findById(req.user.id, function (err, user) {
+            console.log(user);
+            user.local.posts.push(posts);
+            user.local.postsCount = user.local.postsCount + 1;
+            user.save();
+            res.json(req.body);
+        });
+    });
+
+    app.get('/allPosts', function (req, res) {
+        Post.find({}, function (err, posts) {
+            res.json(posts); 
+        });
     });
 
 };
