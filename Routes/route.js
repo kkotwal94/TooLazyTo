@@ -42,13 +42,16 @@
     app.post('/posts', isLoggedIn, function (req, res) {
         console.log(req.body);
         var posts = new Post(req.body);
+        
         console.log(posts);
-        posts.save();
+        
        
         User.findById(req.user.id, function (err, user) {
             console.log(user);
             user.local.posts.push(posts);
             user.local.postsCount = user.local.postsCount + 1;
+            posts.author = user.local.email;
+            posts.save();
             user.save();
             res.json(req.body);
         });

@@ -57,7 +57,11 @@
 .ae-ui .ae-toolbar, .ae-ui [class^=ae-toolbar-] {
   line-height: 1;
   padding: 10px;
-  position: absolute; }
+  position: absolute;
+  margin-top : -350px;
+  margin-left: -600px;
+  float: left;
+ }
   .ae-ui .ae-toolbar input, .ae-ui .ae-toolbar textarea, .ae-ui .ae-toolbar keygen, .ae-ui .ae-toolbar select, .ae-ui .ae-toolbar button, .ae-ui [class^=ae-toolbar-] input, .ae-ui [class^=ae-toolbar-] textarea, .ae-ui [class^=ae-toolbar-] keygen, .ae-ui [class^=ae-toolbar-] select, .ae-ui [class^=ae-toolbar-] button {
     font-size: 14px; }
   .ae-ui .ae-toolbar.ae-toolbar-transition, .ae-ui [class^=ae-toolbar-].ae-toolbar-transition {

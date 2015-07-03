@@ -65,13 +65,13 @@ var PostForm = React.createClass({
        var title  = React.findDOMNode(this.refs.title).value.trim();
        var body   = React.findDOMNode(this.refs.body).value.trim();
       
-       if(!title || !link || !body) {
+       if(!title || !body) {
           return;
        }
-       this.props.onPostSubmit({title:title, body:body, link:link});
+       this.props.onPostSubmit({title:title, body:body});
        React.findDOMNode(this.refs.title).value = '';
        React.findDOMNode(this.refs.body).value = '';
-       React.findDOMNode(this.refs.link).value = '';
+       
        },
     render: function() {
        return (
@@ -95,6 +95,59 @@ React.render(<PostFiller  pollInterval={postInterval}/>,
 document.getElementById('createPosts'));
 
 $(document).ready(function () {
-		AlloyEditor.editable('ckedit');
+		AlloyEditor.editable('ckedit', {
+		uiNode: 'modal-4',
+                toolbars: {
+
+	add: {
+        buttons: ['image', 'camera', 'hline', 'table'],
+        tabIndex: 2
+    },
+        styles: {
+            selections: [
+                {
+                    name: 'text',
+                    buttons: [{
+                        name: 'styles',
+                        cfg: {
+                            styles: [
+                                {
+                                    name: 'Head 1',
+                                    style: { element: 'h1' }
+                                },
+                                {
+                                    name: 'Head 2',
+                                    style: { element: 'h2' }
+                                },
+                                {
+                                    name: 'Big',
+                                    style: { element: 'big' }
+                                },
+                                {
+                                    name: 'Small',
+                                    style: { element: 'small' }
+                                },
+				{
+				    name: 'Formatted',
+				    style: {element: 'pre'}
+				},
+                                {
+                                    name: 'Code',
+                                    style: { element: 'code' }
+                                },
+                               { name: 'Inline Quotation', style:{element: 'q'} }
+                            ]
+                        }
+                    },'quote','bold', 'italic', 'underline', 'link', 'twitter','subscript','superscript', 'ul', 'ol'],
+                    test: AlloyEditor.SelectionTest.text
+                }
+            ]
+        }
+    }
+
+
+
+
+});
     
 });

@@ -70,10 +70,11 @@ perspective effects (not including the modals and the overlay).
 .md-content {
 	
 	background: black;
-	position: relative;
+        position: relative;
 	border-radius: 3px;
 	margin: 0 auto;
 }
+
 
 .md-content h3 {
     color: white;
