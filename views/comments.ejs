@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
@@ -10,17 +10,17 @@
     <title>Too Lazy To...</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="/views/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../views/css/bootstrap.min.css" rel="stylesheet">
 	
     <!-- Custom CSS -->
-    <link href="views/css/simple-sidebar.css" rel="stylesheet">
+    <link href="../views/css/simple-sidebar.css" rel="stylesheet">
 	  
   
   
  
 
 	    
-		<link rel="stylesheet" type="text/css" href="views/css/component.css" />
+		<link rel="stylesheet" type="text/css" href="../views/css/component.css" />
 		<link href="/alloy-editor/assets/alloy-editor-ocean.css" rel="stylesheet">
 		
 
@@ -217,7 +217,9 @@ display : inline-block;
                 <li>
                     <a href="/">Home</a>
                 </li>
-                
+                <li>
+                    <a class="md-trigger" id = "hi" data-modal="modal-5">Search</a>
+                </li>
                 <li>
                     <a class="md-trigger" id = "hi" data-modal="modal-1">Profile</a>
                 </li>
@@ -260,39 +262,14 @@ display : inline-block;
 
 				   <hr/>
 				
-				   <% if (message.length > 0) { %>
-     <div class="alert alert-danger" role="alert"><%= message %></div>
-     <% } %>
-
-	 <% if (smessage.length > 0) { %>
-     <div class="alert alert-danger" role="alert"><%= smessage %></div>
-     <% } %>
+				   
 						
 
 						<div>
 						<!-- Navigation tabbing -->
-						<ul class="nav nav-tabs" role="tablist">
-						<li role="presentation" class="active"><a href="#hot" aria-controls="home" role="tab" data-toggle="tab">Hot</a></li>
-						<li role="presentation"><a href="#rising" aria-controls="profile" role="tab" data-toggle="tab">Rising</a></li>
-						<li role="presentation"><a href="#nolove" aria-controls="profile" role="tab" data-toggle="tab">No Love..</a></li>
-						<li role="presentation"><a href="#newest" aria-controls="profile" role="tab" data-toggle="tab">Newest</a></li>
-						<li role="presentation"><a href="#oldest" aria-controls="profile" role="tab" data-toggle="tab">Oldest</a></li>
-						</ul>
-						<!-- Ended navigation tabbing -->
-						  <!-- Tab panes -->
-                        <div class="tab-content">
-							<div role="tabpanel" class="tab-pane fade in active" id="hot">
-							
-							</div>
-							<div role="tabpanel" class="tab-pane fade" id="rising"></div>
-							<div role="tabpanel" class="tab-pane fade" id="nolove"></div>
-							<div role="tabpanel" class="tab-pane fade" id="newest"></div>
-							<div role="tabpanel" class="tab-pane fade" id="oldest"></div>
-    
-						</div>
-                        </p>
-						</p>
-						</p>
+						<div id = "createComments"></div>
+   						 </div>
+						
                         <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
                     </div>
                 </div>
@@ -300,8 +277,7 @@ display : inline-block;
         </div>
         <!-- /#page-content-wrapper -->
 		
-		
-    </div>
+	
     <!-- /#wrapper -->
 	<div class="md-overlay"></div><!-- the overlay element -->
 	
@@ -311,8 +287,8 @@ display : inline-block;
 
 	     
 		<!-- classie.js by @desandro: https://github.com/desandro/classie -->
-		<script src="views/js/classie.js"></script>
-		<script src="views/js/modalEffects.js"></script>
+		<script src="../views/js/classie.js"></script>
+		<script src="../views/js/modalEffects.js"></script>
 
 		<!-- for the blur effect -->
 		<!-- by @derSchepp https://github.com/Schepp/CSS-Filters-Polyfill -->
@@ -320,30 +296,25 @@ display : inline-block;
 			// this is important for IEs
 			var polyfilter_scriptpath = '/js/';
 		</script>
-		
+		<script type="text/jsx;harmony=true" src = "../public/createComments.jsx"></script>
+		<script type="text/jsx;harmony=true" src = "../public/createPosts.jsx"></script>
   
-		<script src="views/js/cssParser.js"></script>
-		<script src="views/js/css-filters-polyfill.js"></script>
-		<script src="views/js/modernizr.custom.js"></script>
+		<script src="../views/js/cssParser.js"></script>
+		<script src="../views/js/css-filters-polyfill.js"></script>
+		<script src="../views/js/modernizr.custom.js"></script>
     <!-- jQuery -->
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
 	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		
 		
-  	    <script src="build/JSXTransformer.js"></script>
-        <script src="build/react.js"></script>
+  	    <script src="../build/JSXTransformer.js"></script>
+        <script src="../build/react.js"></script>
 
-		<script type="text/jsx;harmony=true" src = "public/createPosts.jsx"></script>
-<script type="text/jsx;harmony=true" src = "public/posts.jsx"></script>
-<script type="text/jsx;harmony=true" src = "public/risingposts.jsx"></script>
-<script type="text/jsx;harmony=true" src = "public/noloveposts.jsx"></script>
-<script type="text/jsx;harmony=true" src = "public/newestposts.jsx"></script>
-<script type="text/jsx;harmony=true" src = "public/oldestposts.jsx"></script>
 
-    <script src="views/js/jquery.js"></script>
+    <script src="../views/js/jquery.js"></script>
 	<script src="/alloy-editor/alloy-editor-all.js"></script>
     <!-- Bootstrap Core JavaScript -->
-    <script src="/views/js/bootstrap.min.js"></script>
+    <script src="../views/js/bootstrap.min.js"></script>
 
     <!-- Menu Toggle Script -->
     <script>

@@ -6,7 +6,7 @@
     var Post = mongoose.model('Post');
     var Comment = mongoose.model('Comment');
     var User = mongoose.model('User');
-    
+
     
     
     app.get('/', function (req, res) {
@@ -42,7 +42,8 @@
     app.post('/posts', isLoggedIn, function (req, res) {
         console.log(req.body);
         var posts = new Post(req.body);
-        
+        var myDate = Date();
+        posts.date = myDate;
         console.log(posts);
         
        
@@ -139,8 +140,22 @@
    });
 
 
+
 //Post downvotes ---------------------------------------------------->
+
+ app.get('/posts/:posts', function(req, res) {
+    res.render('comments.ejs', { user     : req.user});
+});
+
+ app.get('/posts/:posts/getPost', function(req, res) {
+    var id = req.params.posts;
+    Post.findById(id, function(err, posts) {
+        res.json(posts);
+    });
+ });
+
 }; 
+
 
 //route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
