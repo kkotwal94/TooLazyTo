@@ -18,6 +18,10 @@ var userSchema = mongoose.Schema({
         commentsCount: { type: Number, default: 0 },
         upvotes      : { type: Number, default: 0 },
         karma        : { type: Number, default: 0 },
+        upvotedP     : [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
+        downvotedP   : [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
+	upvotedC     : [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}],
+        downvotedC   : [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}],
         title        : { type: String, default: "Superhero in Training" }
     }
 });

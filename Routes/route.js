@@ -51,6 +51,7 @@
             user.local.posts.push(posts);
             user.local.postsCount = user.local.postsCount + 1;
             posts.author = user.local.email;
+            posts.owner = user;
             posts.save();
             user.save();
             res.json(req.body);
@@ -63,9 +64,83 @@
         });
     });
 
-};
+
+//Post upvotes ------------------------------------------------------>
+   app.put('/posts/:upvote/upvote', isLoggedIn, function(req, res) {
+     var id = req.params.upvote;
+     console.log(req.user.local.upvotedP);
+     if(contains(req.user.local.upvotedP, id)) {
+        req.user.save();
+        console.log("This has already been upvoted!");
+     Post.findById(id, function(err, posts) {
+        posts.downvote(function(err, post) {
+        var uid = posts.owner;
+        User.findById(uid, function(err, users) {
+            users.local.upvotes = users.local.upvotes - 1;
+            users.save();
+            res.json(posts);
+        });
+    });
+     });
+    }
+    else {
+        console.log("First time upvoting!");
+        Post.findById(id, function(err, posts) {
+        posts.upvote(function(err, post) {
+        
+        
+        User.findById(posts.owner, function(err, users) {
+            users.local.upvotes = users.local.upvotes + 1;
+            users.local.upvotedP.push(posts);
+            users.save();
+            res.json(posts);
+        });
+    });
+     });
+    }
+
+    
+   });
+//Post upvotes ------------------------------------------------------>
+
+//Post downvotes ---------------------------------------------------->
+   app.put('/posts/:downvote/downvote', isLoggedIn, function(req, res) {
+     var id = req.params.downvote;
+     if(contains(req.user.local.downvotedP, id)) {
+        req.user.save();
+        console.log("This has already been downvoted");
+     Post.findById(id, function(err, posts) {
+        posts.upvote(function(post, err) {
+        var uid = posts.owner;
+        User.findById(uid, function(err, users) {
+            users.local.upvotes = users.local.upvotes + 1;
+            users.save();
+            res.json(posts);
+        });
+      });
+     });
+    }
+    else {
+        console.log("First time downvoting");
+        Post.findById(id, function(err, posts) {
+        posts.downvote(function(post, err) {
+        var uid = posts.owner;
+        User.findById(uid, function(err, users) {
+            users.local.upvotes = users.local.upvotes - 1;
+            users.local.downvotedP.push(posts);
+            users.save();
+            res.json(posts);
+        });
+    });
+     });
+    }
+
+    
+   });
 
 
+//Post downvotes ---------------------------------------------------->
+}; 
 
 //route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
@@ -76,14 +151,19 @@ function isLoggedIn(req, res, next) {
     //if they arent redirect them to the home page
     res.redirect('/');
 }
-//================r/routes Contains=====================//
+//================database Contains=====================//
 function contains(arr, id) {
     for (var i = 0; i < arr.length; i++) {
-        if (arr[i] === id.toString()) {
+       
+        console.log(arr);
+        if (arr[i] == id) {
+            console.log("splicing!");
             console.log(arr[i]);
             arr.splice(i, 1);
+            console.log(arr);
             return true;
         }
     }
+    console.log('coming back false');
     return false;
 }

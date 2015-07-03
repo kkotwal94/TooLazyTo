@@ -95,7 +95,7 @@ var List = React.createClass({ //has to be called list
 {function(event){
 console.log(post._id);
  $.ajax({
-            url: id + '/' + post._id + '/upvote',
+            url:  '/posts/' + post._id + '/upvote',
             dataType: 'json',
             type: 'PUT',
             success: function(data) {
@@ -114,7 +114,7 @@ onClick =
 {function(event){
 console.log(post._id);
  $.ajax({
-            url: id + '/' + post._id + '/downvote',
+            url: '/posts/' + post._id + '/downvote',
             dataType: 'json',
             type: 'PUT',
             success: function(data) {
