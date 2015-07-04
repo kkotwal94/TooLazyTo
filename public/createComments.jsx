@@ -4,7 +4,9 @@ var sub = array[array.length-1];
 var converter = new Showdown.converter();
 var postInterval = 1000;
 var id = '/posts/' + sub + '/getPost';
-console.log(id);
+var name;
+var href;
+console.log(sub);
 
 var PostFiller = React.createClass({
   
@@ -18,11 +20,33 @@ var PostFiller = React.createClass({
             success: function(data) {
                
    
-               console.log(data);
+               
                this.setState({post:data});
                
             }.bind(this),
         error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+    },
+   
+   getUser : function() {
+    $.ajax({
+            url: '/u/' + sub,
+            dataType: 'json',
+            success: function(data) {
+               
+   
+               
+               
+               name = data.local.email;
+               href = '/user/' + data._id;
+
+               this.setState({user:data});
+               
+            }.bind(this),
+        error: function(xhr, status, err) {
+                console.log("error");
                console.error(this.props.url,status, err.toString());
             }.bind(this)
         });
@@ -33,12 +57,13 @@ var PostFiller = React.createClass({
    getInitialState: function() {
        return {
           post: [],
+          user: []
           
        }
     },
 
     componentDidMount: function() {
-    
+    this.getUser();
         this.getPost();
         
         //setInterval(this.loadPostsFromServer, this.props.pollInterval);
@@ -52,7 +77,7 @@ var PostFiller = React.createClass({
             
             
             
-            <List posts = {this.state.post} />
+            <List posts = {this.state.post} users = {this.state.user} />
             </div>
            
             
@@ -67,10 +92,13 @@ var PostFiller = React.createClass({
 var List = React.createClass({ //has to be called list
     
     render: function() {
-    var post = this.props.posts; 
+
     var j = " " + this.props.posts.body + " ";
+    var post = this.props.posts; 
+    var user = this.props.users;
     
     return(
+
     <ul className = "list-unstyled">
     {
     
@@ -136,7 +164,9 @@ console.log(post._id);
           <div className = "panel panel-body">
           <div dangerouslySetInnerHTML={{__html : j }} />
           </div>
-          <div className = "panel panel-footer"></div>
+          <div className = "panel panel-footer">
+          <a href = {href}>View : {name}s profile</a> or <a>Give this user some Karma</a>
+          </div>
           </div>
 </div>
          

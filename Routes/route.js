@@ -65,6 +65,15 @@
         });
     });
 
+    app.get('/u/:postid', function(req, res) {
+        var id = req.params.postid;
+        Post.findById(id, function(err, posts) {
+            console.log(posts);
+            User.findById(posts.owner, function(err, user) {
+                res.json(user);
+            });
+   });
+    });
 
 //Post upvotes ------------------------------------------------------>
    app.put('/posts/:upvote/upvote', isLoggedIn, function(req, res) {
@@ -152,6 +161,10 @@
     Post.findById(id, function(err, posts) {
         res.json(posts);
     });
+ });
+
+ app.get('/user/:user', function(req, res) {
+    res.render("profile.ejs", {user : req.user});
  });
 
 }; 

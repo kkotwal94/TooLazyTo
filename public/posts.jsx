@@ -16,7 +16,6 @@ updatedList = updatedList.filter(function(item){
 this.setState({items: updatedList});
 console.log(updatedList);
 },
-
 titleList : function(event){
 var updatedList = this.state.posts;
 updatedList = updatedList.filter(function(item){
@@ -235,7 +234,7 @@ console.log(post._id);
     }
    </ul>
     )
-	
+
     }
    });
 
