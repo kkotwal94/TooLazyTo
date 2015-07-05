@@ -167,6 +167,29 @@
     res.render("profile.ejs", {user : req.user});
  });
 
+
+ app.get('/profile/:user', function(req, res) {
+    var id = req.params.user;
+    User.findById(id, function(err, user) {
+        res.json(user);
+    });
+ });
+
+app.get('/userPosts/:user', function(req, res) {
+    var id = req.params.user;
+    Post.find({"owner" : id}, function(err, post) {
+        res.json(post);
+    });
+});
+
+
+app.get('/userComments/:user', function(req, res) {
+    var id = req.params.user;
+    Comment.find({"owner" : id}, function(err, comment) {
+        res.json(comment);
+    });
+});
+
 }; 
 
 
