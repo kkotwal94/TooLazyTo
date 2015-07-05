@@ -14,6 +14,7 @@ Original Project : https://github.com/keithyong/too-lazy
 * So much redundant code to look at and clean up(lookin at you react .jsx files)
 * Create a good front end view of nested comments. Want it to look reddit style.
 * Incorporate alloy editor for each text area that is opened up, therefore having multiple alloyeditors
+* User profile view, loads up users posts and comments slow, or it doesnt at all sometimes, need consistent method
 
 
 
