@@ -17,7 +17,7 @@ var PostFiller = React.createClass({
 		data: data,
 		success: function() {
 					callback;  
-					window.location.href ="/";
+					window.location.href = window.location.href;
 					},
 		error: function(xhr, status, err) {
 		console.log("failed");

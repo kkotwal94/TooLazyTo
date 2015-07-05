@@ -1,5 +1,5 @@
 ﻿var mongoose = require('mongoose');
-
+var deepPopulate = require('mongoose-deep-populate');
 var PostSchema = new mongoose.Schema({
     title     : String,
     body      : String,
@@ -20,7 +20,7 @@ PostSchema.methods.downvote = function (cb) {
     this.upvotes -= 1;
     this.save(cb);
 };
-
+PostSchema.plugin(deepPopulate);
 var Post = mongoose.model('Post', PostSchema);
 
 module.exports = Post;

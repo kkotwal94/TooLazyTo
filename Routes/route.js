@@ -6,7 +6,9 @@
     var Post = mongoose.model('Post');
     var Comment = mongoose.model('Comment');
     var User = mongoose.model('User');
-    
+    var Promise = require('bluebird');
+    var mongoose = require('mongoose');
+    Promise.promisifyAll(mongoose);
 
     
     
@@ -197,6 +199,49 @@
     });
  });
 
+ /*app.get('/posts/:posts/getPost/comments', function(req, res) {
+    var id = req.params.posts;
+    var array = [];
+    var totalproc = 0;
+    Post.findById(id, function(err, posts) {
+        if(posts.comments.length == 0) {
+            res.json(array);
+        }
+
+        console.log(posts.comments[0]);
+        posts.comments.forEach(function(comment) {
+            
+             Comment.findById(comment._id, function (err, com) {
+                console.log(com);
+                if(!err){
+                array.push(com);
+                totalproc = totalproc + 1;
+                }
+                if(totalproc == posts.comments.length){
+                    res.json(array);
+                }
+
+             });
+        });
+       
+    
+    });
+ });
+*/
+
+
+app.get('/posts/:posts/getPost/comments', function(req, res) {
+var id = req.params.posts;
+ Post.findById(id).deepPopulate('comments.comments.comments.comments.comments.comments').execAsync() //i am looking for a form, using deeppopulate funct we fill out subforms to the 6th level, because I don't think there will be more than 6 levels, and if so we can just add in more..
+        .then(function (doc) { //for the doc that the async call gets
+             console.log(doc);
+            res.json(doc); //we send that doc with the populated fields  
+        }).catch(function (err) { //if there is a error than tell us
+            res.send('Something is wrong..' + err.message) //err.message holds true error, might be vague
+        });
+
+    });
+   
  app.get('/user/:user', function(req, res) {
     res.render("profile.ejs", {user : req.user});
  });
@@ -222,6 +267,28 @@ app.get('/userComments/:user', function(req, res) {
     Comment.find({"owner" : id}, function(err, comment) {
         res.json(comment);
     });
+});
+
+app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
+    var id = req.params.postid;
+    var comments = new Comment();
+    console.log(req.user);
+    var myDate = Date();
+    var author = req.user.local.email;
+    var owner = req.user;
+    
+    comments.author = author;
+    comments.date = myDate;
+    comments.owner = owner;
+    comments.body = req.body.body;
+    comments.save();
+    req.user.local.comments.push(comments);
+    req.user.save();
+    Post.findById(id, function(err, post){
+        post.comments.push(comments);
+        post.save();
+    });
+    res.json(req.body);
 });
 
 }; 
