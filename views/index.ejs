@@ -86,7 +86,24 @@ display : inline-block;
     width: auto;
     display: inline;
 }
+
+.button-space {
+	padding-bottom: 10px;
+
+}
+
+#profileInfo {
+	//display: inline-block;
+	text-align: center;
+	outline: 1px solid black;
+	}
+#editProfile {
+	//display: inline-block;
+	text-align: center;
+	outline: 1px solid black;
+	}
 	</style>
+
 
 
 
@@ -99,10 +116,37 @@ display : inline-block;
 		<div class="md-modal md-effect-1" id="modal-1">
 			<div class="md-content">
 				<h3>Profile</h3>
+				<% if (user != null) { %>
 				<div>
-					<p>Insert Profile React component here!</p>
+						<div id = "profileInfo">
+						<ul class = "list-unstyled">
+						<li>First Name : <%= user.local.firstName %></li>
+						<li>Last Name : <%= user.local.lastName %></li>
+						<li>DOB : <%= user.local.dob %></li>
+						<li>School Year : <%= user.local.schoolYear %></li>
+						<li>Upvotes : <%= user.local.upvotes %></li>
+						<li>Karma : <%= user.local.karma %></li>
+
+						</div>
+
+						<div id = "editProfile">
+						ahh
+						</div>
+
+						<div class ="button-space">
+						<button> Update! </button>
+						</div>
+						<button class="md-close">Close me!</button>
+				</div>
+						<% } %>
+
+						<% if (user == null) { %>
+						<div>
+					<p>Sign up if you want a profile!</p>
 					<button class="md-close">Close me!</button>
 				</div>
+						<% } %>
+				
 			</div>
 		</div>
 
@@ -339,6 +383,7 @@ display : inline-block;
 <script type="text/jsx;harmony=true" src = "public/noloveposts.jsx"></script>
 <script type="text/jsx;harmony=true" src = "public/newestposts.jsx"></script>
 <script type="text/jsx;harmony=true" src = "public/oldestposts.jsx"></script>
+<script type="text/jsx;harmony=true" src = "public/editProfile.jsx"></script>
 
     <script src="views/js/jquery.js"></script>
 	<script src="/alloy-editor/alloy-editor-all.js"></script>

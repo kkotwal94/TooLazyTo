@@ -17,7 +17,40 @@
         }); //load the index.ejs file
     });
     
-    
+    app.get('/user', function (req, res) {
+        var id = req.user;
+        res.json(id);
+    });
+
+    app.post('/updateProfile', function (req, res) {
+        var id = req.user;
+       
+           
+        if (req.body.firstName == "") {
+            req.body.firstName = req.user.local.firstName;
+        }
+        if (req.body.lastName == "") {
+            req.body.lastName = req.user.local.lastName;
+        }
+        if (req.body.dob == "") {
+            req.body.dob = req.user.local.dob;
+        }
+        if (req.body.schoolYear == "") {
+            req.body.schoolYear = req.user.local.schoolYear;
+        }
+        
+        User.findById(id, function (err, user) {
+            user.local.firstName = req.body.firstName;
+            user.local.lastName = req.body.lastName;
+            user.local.dob = req.body.dob;
+            user.local.schoolYear = req.body.schoolYear;
+            
+            user.save();
+        
+        });
+        res.json(req.body);
+    });
+
     //app/post ('/login', do all our passport stuff here)
     
     app.post('/login', passport.authenticate('local-login', {

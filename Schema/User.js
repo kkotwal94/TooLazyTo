@@ -10,7 +10,7 @@ var userSchema = mongoose.Schema({
         password     : String,
         firstName    : String, 
         lastName     : String,
-        dob          : String,
+        dob          :{type: String, default: "MM/DD/YYYY"},
         schoolYear   : String,
         posts        : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
         comments     : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
