@@ -82,7 +82,7 @@ console.log(updatedList);
     componentDidMount: function() {
     
         this.loadPostsFromServer();
-        this.setState({items: this.state.posts});	
+        //this.setState({items: this.state.posts});	
         //setInterval(this.loadPostsFromServer, this.props.pollInterval);
        
     },
@@ -99,12 +99,31 @@ console.log(updatedList);
             <div className="form-group">
 				<button for="collapseFive" className="btn btn-default" data-toggle="collapse" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">SEARCH!</button>
 					<div id="collapseFive" className="collapse">
-					
-						<input type="text" placeholder="Search by Author!" className = "form-control form-control-inline"  onChange ={this.authorList}	/>
-					
-						<input type="text" placeholder="Search by Title!" className = "form-control form-control-inline"  onChange ={this.titleList}/>
-						<input type="text" placeholder="Search by Date!"  className = "form-control form-control-inline" onChange ={this.dateList}/>
-						<input type="text" placeholder="Search by Upvotes!" className = "form-control form-control-inline"  onChange ={this.upvotesList}/>
+					<span className="input input--hoshi">
+					<input className="input__field input__field--hoshi" type="text" id="input-4" onChange = {this.authorList}/>
+					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-4">
+						<span className="input__label-content input__label-content--hoshi">Search by Author!</span>
+					</label>
+					</span>
+						
+						<span className="input input--hoshi">
+					<input className="input__field input__field--hoshi" type="text" id="input-4" onChange = {this.titleList}/>
+					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-4">
+						<span className="input__label-content input__label-content--hoshi">Search by Title!</span>
+					</label>
+					</span>
+						<span className="input input--hoshi">
+					<input className="input__field input__field--hoshi" type="text" id="input-4" onChange = {this.dateList}/>
+					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-4">
+						<span className="input__label-content input__label-content--hoshi">Search by Date!</span>
+					</label>
+					</span>
+						<span className="input input--hoshi">
+					<input className="input__field input__field--hoshi" type="text" id="input-4" onChange = {this.upvotesList}/>
+					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-4">
+						<span className="input__label-content input__label-content--hoshi">Search by Upvotes!</span>
+					</label>
+					</span>
 							
 					</div>
 
@@ -241,7 +260,7 @@ console.log(post._id);
 
 
 //console.log(sub);
-React.render(<PostFiller  pollInterval={postInterval}/>,
+React.render(<PostFiller />,
 document.getElementById('hot'));
 
 

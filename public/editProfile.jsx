@@ -20,7 +20,8 @@ loadUserFromServer : function() {
 getInitialState: function() {
     return {
 	 
-	  users: []
+	  users: [],
+	  
 	};
 },
 
@@ -37,8 +38,10 @@ handlePSubmit : function(data,callback) {
 		type: 'POST',
 		data: data,
 		success: function() {
+			
 					callback;  
-					//window.location.href ="/";
+
+					window.location.href = window.location.href;
 					},
 		error: function(xhr, status, err) {
 		console.log("failed");
@@ -46,6 +49,7 @@ handlePSubmit : function(data,callback) {
 		
 		}.bind(this)
 	});
+
    },
    render: function() {
             
@@ -55,8 +59,20 @@ handlePSubmit : function(data,callback) {
 			
 			
             <hr/>
-			
+			<UserView users = {this.state.users}/>
+			<div className = "button-space">
+			<button  role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="true" aria-controls="collapseExample">
+  Update!
+</button>
+			</div>
+			<div id ="collapseExample" className = "collapse">
+			<hr/>
 			<UpdateForm onSubmit={this.handlePSubmit} user = {this.state.users}/>
+
+
+			
+
+			</div>
             <hr/>
             
             
@@ -95,30 +111,33 @@ var UpdateForm = React.createClass({
 
 	return(
 		<form className="form-horizontal" onSubmit={this.handleSubmit}>
-		<div class="form-group">
-		<label className="col-sm-0 control-label">First Name:</label>
-		<div class="col-sm-5">
-		<input type = "text" placeholder={this.props.user.firstName} ref = "firstName"/>
-		</div>
-		</div>
-		<div class="form-group">
-		<label className="col-sm-0 control-label">Last Name:</label>
-		<div class="col-sm-5">
-		<input type = "text" placeholder={this.props.user.lastName} ref = "lastName"/>
-		</div>
-		</div>
-		<div class="form-group">
-		<label className="col-sm-0 control-label">DoB:</label>
-		<div class="col-sm-5">
-		<input type = "text" placeholder={this.props.user.dob} ref = "dob"/>
-		</div>
-		</div>
-		<div class="form-group">
-		<label className="col-sm-0 control-label">What year are you?:</label>
-		<div class="col-sm-5">
-		<input type = "text" placeholder={this.props.user.schoolYear} ref = "schoolYear"/>
-		</div>
-		</div>
+		
+<span className="input input--juro">
+					<input className="input__field input__field--juro" type="text" id="input-28" ref ="firstName" />
+					<label className="input__label input__label--juro" for="input-28">
+						<span className="input__label-content input__label-content--juro">{'Firstname: '+ this.props.user.firstName}</span>
+					</label>
+				</span>
+
+
+		<span className="input input--juro">
+					<input className="input__field input__field--juro" type="text" id="input-28" ref ="lastName" />
+					<label className="input__label input__label--juro" for="input-28">
+						<span className="input__label-content input__label-content--juro">{'Lastname: ' + this.props.user.lastName}</span>
+					</label>
+				</span>
+				<span className="input input--juro">
+					<input className="input__field input__field--juro" type="text" id="input-28" ref ="dob" />
+					<label className="input__label input__label--juro" for="input-28">
+						<span className="input__label-content input__label-content--juro">{'DOB: '+ this.props.user.dob}</span>
+					</label>
+				</span>
+				<span className="input input--juro">
+					<input className="input__field input__field--juro" type="text" id="input-28" ref ="schoolYear" />
+					<label className="input__label input__label--juro" for="input-28">
+						<span className="input__label-content input__label-content--juro">{'schoolYear: ' + this.props.user.schoolYear}</span>
+					</label>
+				</span>
 		
 		<div class="form-group">
 		<label className="col-sm-0 control-label"></label>
@@ -132,8 +151,24 @@ var UpdateForm = React.createClass({
 });
 
 	var UserView = React.createClass ({
+
 		render: function() {
-			return(<p>hi</p>)
+
+			
+						return(
+						<div>
+						<ul className = "list-unstyled">
+						<li>First Name : {this.props.users.firstName}</li>
+						<li>Last Name : {this.props.users.lastName}</li>
+						<li>DOB : {this.props.users.dob}</li>
+						<li>School Year : {this.props.users.schoolYear}</li>
+						<li>Upvotes : {this.props.users.upvotes}</li>
+						<li>Karma : {this.props.users.karma}</li>
+						</ul>
+						</div>
+							)
+
+				
 		}
 	});
 React.render(<UpdateProfile  />,
