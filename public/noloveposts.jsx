@@ -48,9 +48,13 @@ console.log(updatedList);
             url: '/allPosts',
             dataType: 'json',
             success: function(data) {
+			
+              
+			
                for(var j = 0; j < data.length; j++) { 
                 for( var i = 0; i < data.length-1; i++) {
                    if(data[i].comments.length > data[i+1].comments) {
+				   
                    var temp = data[i];
                    data[i] = data[i+1];
                    data[i+1] = temp;
@@ -58,7 +62,6 @@ console.log(updatedList);
                }
              }
    
-               
                this.setState({items:data});
                this.setState({posts:data});
             }.bind(this),
@@ -79,7 +82,7 @@ console.log(updatedList);
     
         this.loadPostsFromServer();
         this.setState({items: this.state.posts});
-        setInterval(this.loadPostsFromServer, this.props.pollInterval);
+        //setInterval(this.loadPostsFromServer, this.props.pollInterval);
        
     },
    
@@ -129,7 +132,7 @@ console.log(updatedList);
             <hr/>
             <div className = "Posts">
             
-            <List posts = {this.state.items}/>
+            <Lists4 posts = {this.state.items}/>
             </div>
            
            
@@ -139,7 +142,7 @@ console.log(updatedList);
 });
 
 
-var List = React.createClass({ //has to be called list
+var Lists4 = React.createClass({ //has to be called list
     
     render: function() {
     var green =  {
@@ -204,7 +207,7 @@ console.log(post._id);
 
 ></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.__v} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()}</p>
+         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()}</p>
          
           </li>
 </div>

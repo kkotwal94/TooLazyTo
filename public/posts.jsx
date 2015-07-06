@@ -60,7 +60,7 @@ console.log(updatedList);
              }
    
                
-               
+               console.log(data);
                this.setState({posts:data});
                this.setState({items:data});
             }.bind(this),
@@ -171,6 +171,7 @@ var ListItem = React.createClass({
 
 
 var List = React.createClass({ //has to be called list
+	
     hello : function() {
     	alert("hello");
     },
@@ -189,8 +190,9 @@ var List = React.createClass({ //has to be called list
     <ul className = "list-unstyled">
     {
      this.props.posts.map(function(post) {
-         return (
-         <div>
+         
+		 return (
+		 <div>
 	 <div className = "inlinegroup"> 
          <div id = "upvote1" className = "inline"><span id = "upvote1" className = "glyphicon glyphicon-menu-up" 
          onClick =
@@ -226,6 +228,7 @@ console.log(post._id);
             success: function(data) {
               //console.log(data);
               console.log("downvote");
+			  
             }.bind(this),
         error: function(xhr, status, err) {
                console.error(this.props.url,status, err.toString());
@@ -244,7 +247,7 @@ console.log(post._id);
 
 ></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.__v} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()}</p>
+         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()}</p>
          
           </li>
 </div>

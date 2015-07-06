@@ -6,7 +6,8 @@ var CommentSchema = new mongoose.Schema({
     upvotes   : { type: Number, default: 0 },
     date      : { type: Date },
     post      : { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
-    comments  : [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}],
+    comments  : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
+    nthNode   : { type: Number, default: 0}, 
     owner     : { type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 

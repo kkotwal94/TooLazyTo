@@ -7,6 +7,7 @@ var PostSchema = new mongoose.Schema({
     date      : { type: Date }, 
     upvotes   : { type: Number, default: 0 },
     comments  : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
+    allComments : {type: Number, default: 0},
     owner     : { type:mongoose.Schema.Types.ObjectId, ref: 'User'} 
 });
 

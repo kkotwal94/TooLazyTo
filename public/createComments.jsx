@@ -156,7 +156,7 @@ console.log(post._id);
 
 ></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.__v} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()}</p>
+         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()}</p>
          
           </li>
           <div className = "panel panel-primary">

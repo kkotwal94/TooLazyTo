@@ -67,7 +67,7 @@ var ProfileFiller = React.createClass({
                    }         
                }
              }
-               this.setState({post: data});
+               this.setState({comments: data});
                console.log(data);
                
 
@@ -149,7 +149,7 @@ var List = React.createClass({
 
   return (
    <tr>
-   <td>{post.title}</td> <td>{post.date}</td> <td>{post.upvotes}</td> <td>{post.comments.length}</td> <td><a href ={"/posts/"+post._id}>View Post here</a></td>
+   <td>{post.title}</td> <td>{post.date}</td> <td>{post.upvotes}</td> <td>{post.allComments}</td> <td><a href ={"/posts/"+post._id}>View Post here</a></td>
     </tr>
   
   

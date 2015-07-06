@@ -137,7 +137,8 @@
         
         User.findById(posts.owner, function(err, users) {
             users.local.upvotes = users.local.upvotes + 1;
-            users.local.upvotedP.push(posts);
+                        req.user.local.upvotedP.push(posts);
+                        req.user.save();
             users.save();
             res.json(posts);
         });
@@ -173,7 +174,8 @@
         var uid = posts.owner;
         User.findById(uid, function(err, users) {
             users.local.upvotes = users.local.upvotes - 1;
-            users.local.downvotedP.push(posts);
+            req.user.local.downvotedP.push(posts);
+            req.user.save();
             users.save();
             res.json(posts);
         });
@@ -281,15 +283,51 @@ app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
     comments.date = myDate;
     comments.owner = owner;
     comments.body = req.body.body;
-    comments.save();
+    
     req.user.local.comments.push(comments);
     req.user.save();
     Post.findById(id, function(err, post){
-        post.comments.push(comments);
+        comments.post = post;
+            post.comments.push(comments);
+            post.allComments = post.allComments + 1;
         post.save();
+        comments.save();
     });
     res.json(req.body);
 });
+
+    app.post('/posts/:id', isLoggedIn, function (req, res) {
+        console.log(req.body);
+        var id = req.params.id;
+        var comments = new Comment();
+        var myDate = Date();
+        var author = req.user.local.email;
+        var owner = req.user;
+        
+        comments.author = author;
+        comments.date = myDate;
+        comments.owner = owner;
+        comments.body = req.body.body;
+        Post.findById(id, function (err, post) {
+            post.allComments = post.allComments + 1;
+            post.save();
+            comments.post = post;
+            Comment.findById(req.body.parentCommentId, function (err, comm) {
+                comments.nthNode = comm.nthNode + 1;
+                comments.save();
+                comm.comments.push(comments); //pushing in nested comment to parent
+                comm.save();
+            });
+           
+            
+        });
+
+        res.redirect('/posts/' + id);
+    });
+    app.post('/test', isLoggedIn, function (req, res) {
+        console.log(req.body);
+        res.redirect(req.body);
+    });
 
 }; 
 

@@ -42,7 +42,7 @@ var CommentFiller = React.createClass({
                 treeCycle(data);
                 data = finalData;
                console.log(data);
-               console.log(data[2]);
+               
                this.setState({comments:data});
                
             }.bind(this),
@@ -102,7 +102,7 @@ var CommentFiller = React.createClass({
              <CreateComment onCommentSubmit={this.handleCommentSubmit} />
             </div>
             
-            <CommentList comments = {this.state.comments} users = {this.state.user} />
+            <CommentList comments = {this.state.comments}/>
             </div>
            
             
@@ -115,12 +115,42 @@ var CommentFiller = React.createClass({
 
 
 var CommentList = React.createClass({ //has to be called list
+
+	
     render : function() {
       return( 
           <ul className = "list-unstyled">
-          {
-            <li>Hello</li>
-          }    
+		  {
+          this.props.comments.map(function(comment) {
+		  return(
+			<div className = "userComments">
+			<div className = {"child" + comment.nthNode}>
+            <li><a href={"/user/" +comment.owner}><strong>{comment.author}</strong></a> {comment.upvotes+" points"} Posted on {comment.date}</li>
+
+			<li>{comment.body}</li>
+			<li><span id = "upvote1" className = "glyphicon glyphicon-chevron-up"></span>&nbsp;<span id = "upvote1" className = "glyphicon glyphicon-chevron-down"></span>&nbsp;<a  role="button" data-toggle="collapse" href={"#collapseExample" + comment._id} aria-expanded="false" aria-controls="collapseExample">
+  Reply
+</a></li>
+			<div className="collapse" id={"collapseExample" + comment._id}>
+			<div id = "reply">
+			<form   method = "post" id = "contactForm">
+			<div className = "form-group">
+			<input type="hidden" name="parentCommentId" value ={comment._id} />
+			<textarea name = "body">Enter reply here</textarea>
+			</div>
+			 
+			<button type = "submit" className = "btn btn-primary">
+			Save</button>
+			</form>
+			</div>
+			</div>
+			</div>
+			<hr/>
+			</div>
+			)
+			})
+			}
+              </ul>
         )
     }
   });
@@ -143,10 +173,12 @@ var CreateComment = React.createClass({
        },
     render: function() {
        return (
-         <form className="postForm" onSubmit={this.handleSubmit}>
+         <form className="postForm" onSubmit={this.handleSubmit} >
       <div class="form-group">
       <label>Comment</label>
-            <textarea id = "ckedite" className = "form-control" placeholder="Comment here!!.." ref="body"></textarea>
+            <textarea id = "comments" className = "form-control" placeholder="Comment here!!.." ref="body">
+			
+			</textarea>
     </div>
             <button type = "submit" className = "btn btn-primary" value="Post">Submit!</button>
          </form>
@@ -173,3 +205,68 @@ function treeCycle(data) {
     }
 //console.log(finalData);    
 }
+
+
+
+$(document).ready(function () {
+		AlloyEditor.editable('commenter', {
+		
+                toolbars: {
+
+	add: {
+        buttons: ['image', 'camera', 'hline', 'table'],
+        tabIndex: 2
+    },
+        styles: {
+            selections: [
+                {
+                    name: 'text',
+                    buttons: [{
+                        name: 'styles',
+                        cfg: {
+                            styles: [
+                                {
+                                    name: 'Head 1',
+                                    style: { element: 'h1' }
+                                },
+                                {
+                                    name: 'Head 2',
+                                    style: { element: 'h2' }
+                                },
+                                {
+                                    name: 'Big',
+                                    style: { element: 'big' }
+                                },
+                                {
+                                    name: 'Small',
+                                    style: { element: 'small' }
+                                },
+				{
+				    name: 'Formatted',
+				    style: {element: 'pre'}
+				},
+                                {
+                                    name: 'Code',
+                                    style: { element: 'code' }
+                                },
+                               { name: 'Inline Quotation', style:{element: 'q'} }
+                            ]
+                        }
+                    },'quote','bold', 'italic', 'underline', 'link', 'twitter','subscript','superscript', 'ul', 'ol'],
+                    test: AlloyEditor.SelectionTest.text
+                }
+            ]
+        }
+    }
+
+
+
+
+});
+    
+});
+
+$('#contactForm').submit(function() {
+alert("hit");
+ return false;
+});

@@ -82,7 +82,9 @@ var PostForm = React.createClass({
          </div>
 		 <div class="form-group">
 			<label>Enter body here</label>
+			<div id = "editing">
             <textarea id = "ckedit" className = "form-control" placeholder="Say Something for post body.." ref="body"></textarea>
+		    </div>
 		</div>
             <button type = "submit" className = "btn btn-primary" value="Post">Submit!</button>
          </form>

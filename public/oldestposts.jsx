@@ -130,7 +130,7 @@ console.log(updatedList);
             <hr/>
             <div className = "Posts">
             
-            <List posts = {this.state.items}/>
+            <List3 posts = {this.state.items}/>
             </div>
            
            
@@ -140,7 +140,7 @@ console.log(updatedList);
 });
 
 
-var List = React.createClass({ //has to be called list
+var List3 = React.createClass({ //has to be called list
     update: function() {
 
       $("#upvote1").click(function(){
@@ -224,7 +224,7 @@ console.log(post._id);
 
 ></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.__v} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()}</p>
+         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()}</p>
          
           </li>
 </div>
