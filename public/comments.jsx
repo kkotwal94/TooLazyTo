@@ -6,6 +6,7 @@ var postInterval = 1000;
 var id = '/posts/' + sub + '/getPost/comments';
 var name;
 var href;
+var finalData = [];
 console.log(sub);
 
 var CommentFiller = React.createClass({
@@ -37,9 +38,11 @@ var CommentFiller = React.createClass({
               url: id,
             dataType: 'json',
             success: function(data) {
-               
-   
+                
+                treeCycle(data);
+                data = finalData;
                console.log(data);
+               console.log(data[2]);
                this.setState({comments:data});
                
             }.bind(this),
@@ -114,7 +117,10 @@ var CommentFiller = React.createClass({
 var CommentList = React.createClass({ //has to be called list
     render : function() {
       return( 
-          <p>Hello</p>    
+          <ul className = "list-unstyled">
+          {
+            <li>Hello</li>
+          }    
         )
     }
   });
@@ -154,3 +160,16 @@ var CreateComment = React.createClass({
 React.render(<CommentFiller />,
 document.getElementById('comments'));
 
+function treeCycle(data) {
+    
+    
+    if(data.comments.length != 0)
+    for(var x = 0; x < data.comments.length; x++)
+    {
+        finalData.push(data.comments[x]);
+        if(data.comments[x].comments.length != 0) {
+           treeCycle(data.comments[x]);
+        }
+    }
+//console.log(finalData);    
+}

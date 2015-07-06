@@ -12,7 +12,7 @@ var PostFiller = React.createClass({
   
 
     
-
+  
    getPost : function() {
       $.ajax({
             url: id,
