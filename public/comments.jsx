@@ -7,6 +7,8 @@ var id = '/posts/' + sub + '/getPost/comments';
 var name;
 var href;
 var finalData = [];
+var d_id;
+var counter = 0;
 console.log(sub);
 
 var CommentFiller = React.createClass({
@@ -38,8 +40,16 @@ var CommentFiller = React.createClass({
               url: id,
             dataType: 'json',
             success: function(data) {
-                
-                treeCycle(data);
+                for(var j = 0; j < data.length; j++) { 
+                for( var i = 0; i < data.length-1; i++) {
+                   if(data[i].upvotes < data[i+1].upvotes) {
+                   var temp = data[i];
+                   data[i] = data[i+1];
+                   data[i+1] = temp;
+                   }         
+               }
+             }
+                treeCycle(data, "Wow");
                 data = finalData;
                console.log(data);
                
@@ -99,6 +109,10 @@ var CommentFiller = React.createClass({
             <div className = "Comment">
             
             <div className = "Submit">
+			<div id = "p">
+			</div>
+			<div id = "j">
+			</div>
              <CreateComment onCommentSubmit={this.handleCommentSubmit} />
             </div>
             
@@ -115,18 +129,42 @@ var CommentFiller = React.createClass({
 
 
 var CommentList = React.createClass({ //has to be called list
-
+		
+		 
+		 
 	
     render : function() {
       return( 
+	
+	
           <ul className = "list-unstyled">
 		  {
           this.props.comments.map(function(comment) {
+			
+		 
+			
+		 
 		  return(
+			
 			<div className = "userComments">
-			<div className = {"child" + comment.nthNode}>
-            <li><a href={"/user/" +comment.owner}><strong>{comment.author}</strong></a> {comment.upvotes+" points"} Posted on {comment.date}</li>
-
+			
+			<div id = {comment._id}>
+			<div className = {"childs" + comment.nthNode} style = {{paddingLeft: 3*comment.nthNode + 'em'}}>
+            <li><a href={"/user/" +comment.owner}><strong>{comment.author}</strong></a> {comment.upvotes+" points"} Posted on {comment.date} <a style = {{fontSize: 0.5 + "em"}}
+			onClick = {function(event){
+				//alert("hello");
+		 var text = "#" + comment._id;
+		 var texted = "#" + comment.pComment;
+		 console.log(text);
+		 
+		 $(text).appendTo(texted);
+				$(text).collapse();
+			
+			
+			}}
+			>(<span className = "glyphicon glyphicon-minus"></span>)</a></li>
+			
+			
 			<li>{comment.body}</li>
 			<li><span id = "upvote1" className = "glyphicon glyphicon-chevron-up"></span>&nbsp;<span id = "upvote1" className = "glyphicon glyphicon-chevron-down"></span>&nbsp;<a  role="button" data-toggle="collapse" href={"#collapseExample" + comment._id} aria-expanded="false" aria-controls="collapseExample">
   Reply
@@ -136,18 +174,21 @@ var CommentList = React.createClass({ //has to be called list
 			<form   method = "post" id = "contactForm">
 			<div className = "form-group">
 			<input type="hidden" name="parentCommentId" value ={comment._id} />
-			<textarea name = "body">Enter reply here</textarea>
+			<textarea name = "body"></textarea>
 			</div>
 			 
 			<button type = "submit" className = "btn btn-primary">
 			Save</button>
 			</form>
 			</div>
+			
 			</div>
 			</div>
-			<hr/>
+			</div>
 			</div>
 			)
+			
+			
 			})
 			}
               </ul>
@@ -192,15 +233,18 @@ var CreateComment = React.createClass({
 React.render(<CommentFiller />,
 document.getElementById('comments'));
 
-function treeCycle(data) {
+function treeCycle(data, str) {
     
-    
+   
     if(data.comments.length != 0)
     for(var x = 0; x < data.comments.length; x++)
     {
+		str = str + " " + data.comments[x].pComment;
+		
+		data.comments[x].treeStruc = str;
         finalData.push(data.comments[x]);
         if(data.comments[x].comments.length != 0) {
-           treeCycle(data.comments[x]);
+           treeCycle(data.comments[x], str);
         }
     }
 //console.log(finalData);    
@@ -270,3 +314,43 @@ $('#contactForm').submit(function() {
 alert("hit");
  return false;
 });
+
+
+/*Original jsx attempt at tree collapses*/
+		 /* if(comment.nthNode != 0) {
+		  if(counter == comment.nthNode - 1) {
+		  d_id = d_id + " " +comment.pComment;
+		  counter = comment.nthNode;
+		  }
+		  else {
+		  console.log("starting new tree from " + comment.pComment); //start our new tree here
+		  d_id = d_id + " " +comment.pComment; //adding this comments parent to string
+		  counter = comment.nthNode; //updating counter
+		  var res = d_id.split(" "); //splitting string by " "
+		  var t = res.length-counter; // setting the substrings we want [1,2,3,t,5,7] from t to end
+		  console.log("//=========================//");
+		  console.log(res);
+		  console.log("//=========================//");
+		  console.log("T: " + t);
+		  var teststring =""; //our string we use in our array
+		  for(var x = t; x<res.length; x++){
+		  teststring = res[x] + " " + teststring +  " ";
+		  }
+		  console.log("TestString: "+ teststring);
+		  d_id = "" + teststring;
+		  }
+		  }
+		  else {
+		  d_id = " ";
+		  counter = 0;
+		  }
+		  console.log("ID: " + d_id);
+		  console.log("Counter: " + counter);
+		  */
+
+
+function divAppend () {
+var div1 = comment.pComment;
+var div2 = comment._id;
+div1.appendChild(div2);
+}

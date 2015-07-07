@@ -308,6 +308,7 @@ app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
         comments.date = myDate;
         comments.owner = owner;
         comments.body = req.body.body;
+        comments.pComment = req.body.parentCommentId;
         Post.findById(id, function (err, post) {
             post.allComments = post.allComments + 1;
             post.save();
@@ -324,10 +325,7 @@ app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
 
         res.redirect('/posts/' + id);
     });
-    app.post('/test', isLoggedIn, function (req, res) {
-        console.log(req.body);
-        res.redirect(req.body);
-    });
+  
 
 }; 
 

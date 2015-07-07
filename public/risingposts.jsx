@@ -49,7 +49,7 @@ console.log(updatedList);
             success: function(data) {
                for(var j = 0; j < data.length; j++) { 
                 for( var i = 0; i < data.length-1; i++) {
-                   if(data[i].comments.length < data[i+1].comments.length) {
+                   if(data[i].allComments < data[i+1].allComments) {
                    var temp = data[i];
                    data[i] = data[i+1];
                    data[i+1] = temp;

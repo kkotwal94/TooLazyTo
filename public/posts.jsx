@@ -5,7 +5,7 @@ var converter = new Showdown.converter();
 var postInterval = 1000;
 var id = '/posts/' + sub;
 var click = 0;
-
+var isIt = false;
 var PostFiller = React.createClass({
  
 authorList : function(event){
@@ -70,18 +70,34 @@ console.log(updatedList);
         });
     },
 
+	 loadUserFromServer: function() {
+        $.ajax({
+            url: '/user',
+            dataType: 'json',
+            success: function(data) {
+			   
+               this.setState({user:data.local});
+			   user = this.state.user;
+            }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+    },
 
 
     getInitialState: function() {
        return {
           posts: [],
-          items: []
+          items: [],
+		  user:  []
        }
     },
 
     componentDidMount: function() {
     
         this.loadPostsFromServer();
+		this.loadUserFromServer();
         //this.setState({items: this.state.posts});	
         //setInterval(this.loadPostsFromServer, this.props.pollInterval);
        
@@ -133,7 +149,7 @@ console.log(updatedList);
             <hr/>
             <div className = "Posts">
             
-            <List posts = {this.state.items} />
+            <List7 user = {this.state.user} posts = {this.state.items} />
             </div>
            
            
@@ -142,59 +158,40 @@ console.log(updatedList);
           }
 });
 
-var ListItem = React.createClass({
-    getInitialState: function() {
-        return {
-            isSelected: false
-        };
-    },
-    handleClick: function() {
-        this.setState({
-            isSelected: true
-        })
-    },
-    render: function() {
-        var isSelected = this.state.isSelected;
-        var style = {
-            'background-color': ''
-        };
-        if (isSelected) {
-            style = {
-                'background-color': '#ccc'
-            };
-        }
-        return (
-            <li onClick={this.handleClick} style={style}>{this.props.content}</li>
-        );
-    }
-});
 
 
-var List = React.createClass({ //has to be called list
-	
-    hello : function() {
-    	alert("hello");
-    },
+
+var List7 = React.createClass({ //has to be called list
+
     render: function() {
-    var blue =  {
+    
+	var green =  {
       color: 'green'
     };
    
     var red = {
        color: 'red'
     };
-
+	
     var upvoted = "upvoted";
     var downvoted = "downvoted";
     return(
     <ul className = "list-unstyled">
     {
      this.props.posts.map(function(post) {
-         
+	 
+	 
+	 var upvoted;
+	 var downvoted;
+	 var tag = "#upvote" + post._id;
+	 var tag2 = "#downvote" + post._id;
+	 var tag3 = "#numbah" + post._id;
+	 
+		       
 		 return (
 		 <div>
 	 <div className = "inlinegroup"> 
-         <div id = "upvote1" className = "inline"><span id = "upvote1" className = "glyphicon glyphicon-menu-up" 
+         <div id = "upvote1" className = "inline"><span id = {"upvote" + post._id} className = "glyphicon glyphicon-menu-up" 
          onClick =
 {function(event){
 
@@ -204,7 +201,19 @@ var List = React.createClass({ //has to be called list
             dataType: 'json',
             type: 'PUT',
             success: function(data) {
-              alert("hello");
+			var color = $(tag).css('color');
+			 if (color == "rgb(64, 77, 91)"){
+			  $(tag).css('color', 'rgb(0, 255, 0)');
+			   $(tag2).css('color', 'rgb(64, 77, 91)');
+			  $(tag3).text(post.upvotes + 1);
+			  console.log("Hit");
+			  }
+			  else {
+			  console.log("Sup?");
+			   $(tag).css('color', "rgb(64, 77, 91)");
+			    $(tag3).text(post.upvotes);
+			  }
+              
               console.log("upvoted");
             }.bind(this),
         error: function(xhr, status, err) {
@@ -214,7 +223,7 @@ var List = React.createClass({ //has to be called list
         
 }
 }
-></span></div> <div className ="inline">{post.upvotes} </div> <div className = "inline"><span className = "glyphicon glyphicon-menu-down" 
+></span></div> <div className ="inline"><span id = {"numbah" + post._id}>{post.upvotes}</span> </div> <div className = "inline"><span id = {"downvote" + post._id}className = "glyphicon glyphicon-menu-down" 
 onClick =           
 {function(event){
 	
@@ -228,18 +237,26 @@ console.log(post._id);
             success: function(data) {
               //console.log(data);
               console.log("downvote");
-			  
+			  var color = $(tag2).css('color');
+			 if (color == "rgb(64, 77, 91)"){
+			  console.log($(tag2).css('color'));
+			  $(tag2).css('color', 'rgb(255, 0, 0)');
+			  $(tag).css('color', 'rgb(64, 77, 91)');
+			  $(tag3).text(post.upvotes - 1);
+			  console.log("Hit");
+			  }
+			  else {
+			 
+			   $(tag2).css('color', "rgb(64, 77, 91)");
+			   $(tag3).text(post.upvotes + 1);
+			  }
             }.bind(this),
         error: function(xhr, status, err) {
                console.error(this.props.url,status, err.toString());
             }.bind(this)
         });
  		
- 		var counter = click %2;
- 		if(click % 2 != 0) {
- 			post.upvotes = post.upvotes + 1;
-
- 		}
+ 		
  
 }
 }
@@ -247,7 +264,7 @@ console.log(post._id);
 
 ></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()}</p>
+         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()} </p>
          
           </li>
 </div>
