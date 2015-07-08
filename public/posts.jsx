@@ -202,15 +202,48 @@ var List7 = React.createClass({ //has to be called list
             type: 'PUT',
             success: function(data) {
 			var color = $(tag).css('color');
-			 if (color == "rgb(64, 77, 91)"){
+      var color2 = $(tag2).css('color');
+			 
+
+       if (color == "rgb(64, 77, 91)"){
+          if (color2 == "rgb(255, 0, 0)"){
+
+         
+
+            $(tag).css('color', 'rgb(0, 255, 0)');
+            $(tag2).css('color', 'rgb(64, 77, 91)');
+            $(tag3).text(post.upvotes + 1);
+            console.log("Hits");
+
+            $.ajax({
+            url:  '/posts/' + post._id + '/downvote',
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              console.log("We got the downvote nulled");
+
+
+          }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+          }
+
+          else {
 			  $(tag).css('color', 'rgb(0, 255, 0)');
 			   $(tag2).css('color', 'rgb(64, 77, 91)');
 			  $(tag3).text(post.upvotes + 1);
 			  console.log("Hit");
 			  }
-			  else {
+      }
+       
+       
+			 
+        else {
 			  console.log("Sup?");
 			   $(tag).css('color', "rgb(64, 77, 91)");
+         console.log(color2);
 			    $(tag3).text(post.upvotes);
 			  }
               
@@ -238,17 +271,46 @@ console.log(post._id);
               //console.log(data);
               console.log("downvote");
 			  var color = $(tag2).css('color');
+        var color2 = $(tag).css('color');
+        console.log(color);
+        console.log(color2);
 			 if (color == "rgb(64, 77, 91)"){
-			  console.log($(tag2).css('color'));
-			  $(tag2).css('color', 'rgb(255, 0, 0)');
-			  $(tag).css('color', 'rgb(64, 77, 91)');
-			  $(tag3).text(post.upvotes - 1);
-			  console.log("Hit");
-			  }
+          if (color2 == "rgb(0, 255, 0)"){
+
+         
+
+            $(tag2).css('color', 'rgb(255, 0, 0)');
+            $(tag).css('color', 'rgb(64, 77, 91)');
+            $(tag3).text(post.upvotes - 1);
+            console.log("Hits");
+
+            $.ajax({
+            url:  '/posts/' + post._id + '/upvote',
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              console.log("We got the upvote nulled");
+
+
+          }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+          }
+
+          else {
+        $(tag).css('color', 'rgb(64, 77, 91)');
+         $(tag2).css('color', 'rgb(255, 0, 0)');
+        $(tag3).text(post.upvotes - 1);
+        console.log("Hit");
+        }
+      }
+
 			  else {
 			 
 			   $(tag2).css('color', "rgb(64, 77, 91)");
-			   $(tag3).text(post.upvotes + 1);
+			   $(tag3).text(post.upvotes);
 			  }
             }.bind(this),
         error: function(xhr, status, err) {
