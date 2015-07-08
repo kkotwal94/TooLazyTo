@@ -40,18 +40,22 @@ var CommentFiller = React.createClass({
               url: id,
             dataType: 'json',
             success: function(data) {
-                for(var j = 0; j < data.length; j++) { 
-                for( var i = 0; i < data.length-1; i++) {
-                   if(data[i].upvotes < data[i+1].upvotes) {
-                   var temp = data[i];
-                   data[i] = data[i+1];
-                   data[i+1] = temp;
+                for(var j = 0; j < data.comments.length; j++) { 
+                for( var i = 0; i < data.comments.length-1; i++) {
+				console.log("looping!");
+                   if(data.comments[i].upvotes < data.comments[i+1].upvotes) {
+				   console.log("hit");
+                   var temp = data.comments[i];
+                   data.comments[i] = data.comments[i+1];
+                   data.comments[i+1] = temp;
                    }         
                }
              }
-                treeCycle(data, "Wow");
+			
+			 
+                treeCycle(data);
                 data = finalData;
-               console.log(data);
+               
                
                this.setState({comments:data});
                
@@ -411,18 +415,16 @@ var CreateComment = React.createClass({
 React.render(<CommentFiller />,
 document.getElementById('comments'));
 
-function treeCycle(data, str) {
+function treeCycle(data) {
     
    
     if(data.comments.length != 0)
     for(var x = 0; x < data.comments.length; x++)
     {
-		str = str + " " + data.comments[x].pComment;
 		
-		data.comments[x].treeStruc = str;
         finalData.push(data.comments[x]);
         if(data.comments[x].comments.length != 0) {
-           treeCycle(data.comments[x], str);
+           treeCycle(data.comments[x]);
         }
     }
 //console.log(finalData);    

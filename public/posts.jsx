@@ -100,8 +100,7 @@ console.log(updatedList);
     
         this.loadPostsFromServer();
 		this.loadUserFromServer();
-        //this.setState({items: this.state.posts});	
-        //setInterval(this.loadPostsFromServer, this.props.pollInterval);
+        
        
     },
    
@@ -196,6 +195,22 @@ var List7 = React.createClass({ //has to be called list
 	 var tag = "#upvote" + post._id;
 	 var tag2 = "#downvote" + post._id;
 	 var tag3 = "#numbah" + post._id;
+	 //===============================
+	 var tag4 = "#upvote1" + post._id;
+	 var tag5 = "#downvote1" + post._id;
+	 var tag6 = "#numbah1" + post._id;
+	 //===============================
+	 var tag7 = "#upvote2" + post._id;
+	 var tag8 = "#downvote2" + post._id;
+	 var tag9 = "#numbah2" + post._id;
+	 //================================
+	 var tag10 = "#upvote3" + post._id;
+	 var tag11 = "#downvote3" + post._id;
+	 var tag12 = "#numbah3" + post._id;
+	 //================================
+	 var tag13 = "#upvote4" + post._id;
+	 var tag14 = "#downvote4" + post._id;
+	 var tag15 = "#numbah4" + post._id;
 	var tracker = post.upvotes;
 	 
 		
@@ -217,25 +232,56 @@ var List7 = React.createClass({ //has to be called list
             success: function(data) {
 			var color = $(tag).css('color');
       var color2 = $(tag2).css('color');
-			
-			
+	  var color3 = $(tag3).css('color');
+	  var color4 = $(tag4).css('color');
+	  var color5 = $(tag5).css('color');
+	  var color6 = $(tag6).css('color');
+	var color7 = $(tag7).css('color');
+	var color8 = $(tag8).css('color');
+	var color9 = $(tag9).css('color');
+	var color10 = $(tag10).css('color');
+	var color11 = $(tag11).css('color');
+	var color12 = $(tag12).css('color');
+	var color13 = $(tag13).css('color');
+	var color14 = $(tag14).css('color');
+	var color15 = $(tag15).css('color');
+	
+
 			console.log(tracker);
 			 console.log("HEH: " + upvotedP);
       
 
 	   if (color == "rgb(64, 77, 91)"){
 		  
-          if (color2 == "rgb(255, 0, 0)"){
+          if (color2 == "rgb(255, 0, 0)" ){
+			if (color5 == "rgb(255, 0, 0)" ){
+				if (color8 == "rgb(255, 0, 0)" ){
+					if (color11 == "rgb(255, 0, 0)" ){
+						if (color14 == "rgb(255, 0, 0)" ){
 
          
 		   
             $(tag).css('color', 'rgb(0, 255, 0)');
             $(tag2).css('color', 'rgb(64, 77, 91)');
+			 $(tag4).css('color', 'rgb(0, 255, 0)');
+            $(tag5).css('color', 'rgb(64, 77, 91)');
+			 $(tag7).css('color', 'rgb(0, 255, 0)');
+            $(tag8).css('color', 'rgb(64, 77, 91)');
+			 $(tag10).css('color', 'rgb(0, 255, 0)');
+            $(tag11).css('color', 'rgb(64, 77, 91)');
+			 $(tag13).css('color', 'rgb(0, 255, 0)');
+            $(tag14).css('color', 'rgb(64, 77, 91)');
 			tracker = tracker + 2;
-            $(tag3).text(tracker);
-            console.log("Hits");
+            
+			$(tag3).text(tracker);
+			$(tag6).text(tracker);
+			$(tag9).text(tracker);
+			$(tag12).text(tracker);
+			$(tag15).text(tracker);
+            
+			console.log("Hits");
 			
-			console.log(tracker);
+			console.log("Tracker Value: " +  tracker);
             $.ajax({
             url:  '/posts/' + post._id + '/downvote',
             dataType: 'json',
@@ -249,14 +295,27 @@ var List7 = React.createClass({ //has to be called list
                console.error(this.props.url,status, err.toString());
             }.bind(this)
         });
-          }
+          }}}}}
 
           else {
 			  $(tag).css('color', 'rgb(0, 255, 0)');
 			   $(tag2).css('color', 'rgb(64, 77, 91)');
+			    $(tag4).css('color', 'rgb(0, 255, 0)');
+			   $(tag5).css('color', 'rgb(64, 77, 91)');
+			   $(tag7).css('color', 'rgb(0, 255, 0)');
+			   $(tag8).css('color', 'rgb(64, 77, 91)');
+			   $(tag10).css('color', 'rgb(0, 255, 0)');
+			   $(tag11).css('color', 'rgb(64, 77, 91)');
+			   $(tag13).css('color', 'rgb(0, 255, 0)');
+			   $(tag14).css('color', 'rgb(64, 77, 91)');
 			   tracker = tracker + 1;
-			   console.log(tracker);
+			   console.log("Tracker Value: " +  tracker);
 			  $(tag3).text(tracker);
+			   $(tag6).text(tracker);
+			   $(tag9).text(tracker);
+			   $(tag12).text(tracker);
+			   $(tag15).text(tracker);
+
 			  
 			  console.log("Hit");
 			  
@@ -269,10 +328,18 @@ var List7 = React.createClass({ //has to be called list
 			  console.log("Sup?");
 			  
 			   $(tag).css('color', "rgb(64, 77, 91)");
+			    $(tag4).css('color', "rgb(64, 77, 91)");
+				$(tag7).css('color', "rgb(64, 77, 91)");
+				$(tag10).css('color', "rgb(64, 77, 91)");
+				$(tag13).css('color', "rgb(64, 77, 91)");
          console.log(color2);
 		 tracker = tracker - 1;
-		 console.log(tracker);
+		 console.log("Tracker Value: " +  tracker);
 			    $(tag3).text(tracker);
+				$(tag6).text(tracker);
+				$(tag9).text(tracker);
+				$(tag12).text(tracker);
+				$(tag15).text(tracker);
 				
 			  }
               
@@ -299,21 +366,51 @@ console.log(post._id);
             success: function(data) {
               //console.log(data);
               console.log("downvote");
-			  var color = $(tag2).css('color');
-        var color2 = $(tag).css('color');
+			 
+		var color = $(tag).css('color');
+      var color2 = $(tag2).css('color');
+	  var color3 = $(tag3).css('color');
+	  var color4 = $(tag4).css('color');
+	  var color5 = $(tag5).css('color');
+	  var color6 = $(tag6).css('color');
+	var color7 = $(tag7).css('color');
+	var color8 = $(tag8).css('color');
+	var color9 = $(tag9).css('color');
+	var color10 = $(tag10).css('color');
+	var color11 = $(tag11).css('color');
+	var color12 = $(tag12).css('color');
+	var color13 = $(tag13).css('color');
+	var color14 = $(tag14).css('color');
+	var color15 = $(tag15).css('color');
         console.log(color);
         console.log(color2);
 		
-			 if (color == "rgb(64, 77, 91)"){
-          if (color2 == "rgb(0, 255, 0)"){
+			 if (color2 == "rgb(64, 77, 91)"){
+				if (color == "rgb(0, 255, 0)"){
+					if (color4 == "rgb(0, 255, 0)"){
+						if (color7 == "rgb(0, 255, 0)"){
+							if (color10 == "rgb(0, 255, 0)"){
+								if (color13 == "rgb(0, 255, 0)"){
 
          
 
             $(tag2).css('color', 'rgb(255, 0, 0)');
             $(tag).css('color', 'rgb(64, 77, 91)');
+			 $(tag4).css('color', 'rgb(255, 0, 0)');
+            $(tag5).css('color', 'rgb(64, 77, 91)');
+			$(tag7).css('color', 'rgb(255, 0, 0)');
+            $(tag8).css('color', 'rgb(64, 77, 91)');
+			$(tag10).css('color', 'rgb(255, 0, 0)');
+            $(tag11).css('color', 'rgb(64, 77, 91)');
+			$(tag13).css('color', 'rgb(255, 0, 0)');
+            $(tag14).css('color', 'rgb(64, 77, 91)');
             tracker = tracker - 2;
 			$(tag3).text(tracker);
-			console.log(tracker);
+			$(tag6).text(tracker);
+			$(tag9).text(tracker);
+			$(tag12).text(tracker);
+			$(tag15).text(tracker);
+			console.log("Tracker Value: " +  tracker);
             console.log("Hits");
 
             $.ajax({
@@ -329,14 +426,26 @@ console.log(post._id);
                console.error(this.props.url,status, err.toString());
             }.bind(this)
         });
-          }
+          } } } } }
 
           else {
         $(tag).css('color', 'rgb(64, 77, 91)');
          $(tag2).css('color', 'rgb(255, 0, 0)');
+		  $(tag4).css('color', 'rgb(64, 77, 91)');
+         $(tag5).css('color', 'rgb(255, 0, 0)');
+		  $(tag7).css('color', 'rgb(64, 77, 91)');
+         $(tag8).css('color', 'rgb(255, 0, 0)');
+		  $(tag10).css('color', 'rgb(64, 77, 91)');
+         $(tag11).css('color', 'rgb(255, 0, 0)');
+		  $(tag13).css('color', 'rgb(64, 77, 91)');
+         $(tag14).css('color', 'rgb(255, 0, 0)');
         tracker = tracker - 1;
-		console.log(tracker);
+		console.log("Tracker Value: " +  tracker);
 		$(tag3).text(tracker);
+		$(tag6).text(tracker);
+		$(tag9).text(tracker);
+		$(tag12).text(tracker);
+		$(tag15).text(tracker);
         console.log("Hit");
         }
       }
@@ -344,9 +453,17 @@ console.log(post._id);
 			  else {
 			 
 			   $(tag2).css('color', "rgb(64, 77, 91)");
+			   $(tag5).css('color', "rgb(64, 77, 91)");
+			   $(tag8).css('color', "rgb(64, 77, 91)");
+			   $(tag11).css('color', "rgb(64, 77, 91)");
+			   $(tag14).css('color', "rgb(64, 77, 91)");
 			   tracker = tracker + 1;
-				console.log(tracker);
+				console.log("Tracker Value: " +  tracker);
 			   $(tag3).text(tracker);
+			   $(tag6).text(tracker);
+			   $(tag9).text(tracker);
+			   $(tag12).text(tracker);
+			   $(tag15).text(tracker);
 			  }
 			  
             }.bind(this),
