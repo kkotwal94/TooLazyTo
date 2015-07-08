@@ -5,7 +5,8 @@ var converter = new Showdown.converter();
 var postInterval = 1000;
 var id = '/posts/' + sub;
 var click = 0;
-var isIt = false;
+var upvotedP;
+var downvotedP;
 var PostFiller = React.createClass({
  
 authorList : function(event){
@@ -61,8 +62,8 @@ console.log(updatedList);
    
                
                console.log(data);
-               this.setState({posts:data});
-               this.setState({items:data});
+               this.setState({posts:data, items:data});
+               
             }.bind(this),
         error: function(xhr, status, err) {
                console.error(this.props.url,status, err.toString());
@@ -77,7 +78,8 @@ console.log(updatedList);
             success: function(data) {
 			   
                this.setState({user:data.local});
-			   user = this.state.user;
+			   upvotedP = this.state.user.upvotedP;
+			   downvotedP = this.state.user.downvotedP;
             }.bind(this),
         error: function(xhr, status, err) {
                console.error(this.props.url,status, err.toString());
@@ -162,9 +164,14 @@ console.log(updatedList);
 
 
 var List7 = React.createClass({ //has to be called list
+	
 
     render: function() {
-    
+	
+    var upvoted = this.props.user.upvotedP;
+	var downvoted = this.props.user.downvotedP;
+	var self = this;
+	
 	var green =  {
       color: 'green'
     };
@@ -172,26 +179,39 @@ var List7 = React.createClass({ //has to be called list
     var red = {
        color: 'red'
     };
-	
-    var upvoted = "upvoted";
-    var downvoted = "downvoted";
+	 //var tracker = 2;
+  
     return(
+	<div>
+	
+	
     <ul className = "list-unstyled">
     {
      this.props.posts.map(function(post) {
 	 
-	 
-	 var upvoted;
-	 var downvoted;
+	 console.log(upvoted);
+	 if (upvoted != undefined) {
+	  var style = {
+        color: upvoted.indexOf(post._id) > -1 ? 'rgb(0, 255, 0)' : 'rgb(64, 77, 91)'
+      };
+
+	  var style2 = {
+	    color: downvoted.indexOf(post._id) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
+	  }
+	  }
 	 var tag = "#upvote" + post._id;
 	 var tag2 = "#downvote" + post._id;
 	 var tag3 = "#numbah" + post._id;
+	var tracker = post.upvotes;
 	 
+		
+	
 		       
 		 return (
 		 <div>
+		
 	 <div className = "inlinegroup"> 
-         <div id = "upvote1" className = "inline"><span id = {"upvote" + post._id} className = "glyphicon glyphicon-menu-up" 
+         <div id = "upvote1" className = "inline"><span  style = {style} id = {"upvote" + post._id} className = "glyphicon glyphicon-menu-up" 
          onClick =
 {function(event){
 
@@ -202,16 +222,64 @@ var List7 = React.createClass({ //has to be called list
             type: 'PUT',
             success: function(data) {
 			var color = $(tag).css('color');
-			 if (color == "rgb(64, 77, 91)"){
+      var color2 = $(tag2).css('color');
+			
+			
+			console.log(tracker);
+			 console.log("HEH: " + upvotedP);
+      
+
+	   if (color == "rgb(64, 77, 91)"){
+		  
+          if (color2 == "rgb(255, 0, 0)"){
+
+         
+		   
+            $(tag).css('color', 'rgb(0, 255, 0)');
+            $(tag2).css('color', 'rgb(64, 77, 91)');
+			tracker = tracker + 2;
+            $(tag3).text(tracker);
+            console.log("Hits");
+			
+			console.log(tracker);
+            $.ajax({
+            url:  '/posts/' + post._id + '/downvote',
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              console.log("We got the downvote nulled");
+
+
+          }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+          }
+
+          else {
 			  $(tag).css('color', 'rgb(0, 255, 0)');
 			   $(tag2).css('color', 'rgb(64, 77, 91)');
-			  $(tag3).text(post.upvotes + 1);
+			   tracker = tracker + 1;
+			   console.log(tracker);
+			  $(tag3).text(tracker);
+			  
 			  console.log("Hit");
+			  
 			  }
-			  else {
+      }
+       
+       
+			 
+        else {
 			  console.log("Sup?");
+			  
 			   $(tag).css('color', "rgb(64, 77, 91)");
-			    $(tag3).text(post.upvotes);
+         console.log(color2);
+		 tracker = tracker - 1;
+		 console.log(tracker);
+			    $(tag3).text(tracker);
+				
 			  }
               
               console.log("upvoted");
@@ -223,7 +291,7 @@ var List7 = React.createClass({ //has to be called list
         
 }
 }
-></span></div> <div className ="inline"><span id = {"numbah" + post._id}>{post.upvotes}</span> </div> <div className = "inline"><span id = {"downvote" + post._id}className = "glyphicon glyphicon-menu-down" 
+></span></div> <div className ="inline"><span id = {"numbah" + post._id}>{post.upvotes}</span> </div> <div className = "inline"><span id = {"downvote" + post._id} style = {style2}className = "glyphicon glyphicon-menu-down" 
 onClick =           
 {function(event){
 	
@@ -236,23 +304,57 @@ console.log(post._id);
             type: 'PUT',
             success: function(data) {
               //console.log(data);
-             
+              console.log("downvote");
 			  var color = $(tag2).css('color');
-			  //var color2 = $(tag1)
-			 if ((color == "rgb(64, 77, 91)") && ($(tag2).css('color') == 'rgb(64, 77, 91)')){
-			  console.log($(tag2).css('color'));
-			  $(tag2).css('color', 'rgb(255, 0, 0)');
-			  $(tag).css('color', 'rgb(64, 77, 91)');
-			  $(tag3).text(post.upvotes - 1);
-			  console.log("Hit");
-			  }
-			 
-			  }
+        var color2 = $(tag).css('color');
+        console.log(color);
+        console.log(color2);
+		
+			 if (color == "rgb(64, 77, 91)"){
+          if (color2 == "rgb(0, 255, 0)"){
+
+         
+
+            $(tag2).css('color', 'rgb(255, 0, 0)');
+            $(tag).css('color', 'rgb(64, 77, 91)');
+            tracker = tracker - 2;
+			$(tag3).text(tracker);
+			console.log(tracker);
+            console.log("Hits");
+
+            $.ajax({
+            url:  '/posts/' + post._id + '/upvote',
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              console.log("We got the upvote nulled");
+
+
+          }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+          }
+
+          else {
+        $(tag).css('color', 'rgb(64, 77, 91)');
+         $(tag2).css('color', 'rgb(255, 0, 0)');
+        tracker = tracker - 1;
+		console.log(tracker);
+		$(tag3).text(tracker);
+        console.log("Hit");
+        }
+      }
+
 			  else {
 			 
 			   $(tag2).css('color', "rgb(64, 77, 91)");
-			   $(tag3).text(post.upvotes + 1);
+			   tracker = tracker + 1;
+				console.log(tracker);
+			   $(tag3).text(tracker);
 			  }
+			  
             }.bind(this),
         error: function(xhr, status, err) {
                console.error(this.props.url,status, err.toString());
@@ -275,6 +377,7 @@ console.log(post._id);
      })
     }
    </ul>
+   </div>
     )
 
     }
@@ -307,5 +410,3 @@ if( a.date  < b.date) return -1;
 if (a.date > b.date) return 1;
 return 0;
 }
-
-

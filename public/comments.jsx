@@ -109,10 +109,8 @@ var CommentFiller = React.createClass({
             <div className = "Comment">
             
             <div className = "Submit">
-			<div id = "p">
-			</div>
-			<div id = "j">
-			</div>
+			
+			
              <CreateComment onCommentSubmit={this.handleCommentSubmit} />
             </div>
             
@@ -136,7 +134,7 @@ var CommentList = React.createClass({ //has to be called list
     render : function() {
       return( 
 	
-	
+		  <div className = "total">
           <ul className = "list-unstyled">
 		  {
           this.props.comments.map(function(comment) {
@@ -192,6 +190,7 @@ var CommentList = React.createClass({ //has to be called list
 			})
 			}
               </ul>
+			  </div>
         )
     }
   });
