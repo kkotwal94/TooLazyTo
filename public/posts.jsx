@@ -236,14 +236,17 @@ console.log(post._id);
             type: 'PUT',
             success: function(data) {
               //console.log(data);
-              console.log("downvote");
+             
 			  var color = $(tag2).css('color');
-			 if (color == "rgb(64, 77, 91)"){
+			  //var color2 = $(tag1)
+			 if ((color == "rgb(64, 77, 91)") && ($(tag2).css('color') == 'rgb(64, 77, 91)')){
 			  console.log($(tag2).css('color'));
 			  $(tag2).css('color', 'rgb(255, 0, 0)');
 			  $(tag).css('color', 'rgb(64, 77, 91)');
 			  $(tag3).text(post.upvotes - 1);
 			  console.log("Hit");
+			  }
+			 
 			  }
 			  else {
 			 
