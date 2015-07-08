@@ -172,14 +172,8 @@ var List7 = React.createClass({ //has to be called list
 	var downvoted = this.props.user.downvotedP;
 	var self = this;
 	
-	var green =  {
-      color: 'green'
-    };
-   
-    var red = {
-       color: 'red'
-    };
-	 //var tracker = 2;
+	
+	 
   
     return(
 	<div>

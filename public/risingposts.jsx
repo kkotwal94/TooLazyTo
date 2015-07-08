@@ -141,13 +141,7 @@ console.log(updatedList);
 var List2 = React.createClass({ //has to be called list
     
     render: function() {
-    var green =  {
-      color: 'green'
-    };
-   
-    var red = {
-       color: 'red'
-    };
+  
 
     var upvoted = "upvoted";
     var downvoted = "downvoted";

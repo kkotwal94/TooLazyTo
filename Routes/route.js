@@ -148,9 +148,84 @@
 
     
    });
-//Post upvotes ------------------------------------------------------>
+    //Post upvotes ------------------------------------------------------>
+    
+    //Comment upvotes ------------------------------------------------------>
+    app.put('/comments/:upvote/upvote', isLoggedIn, function (req, res) {
+        var id = req.params.upvote;
+        console.log(req.user.local.upvotedC);
+        if (contains(req.user.local.upvotedC, id)) {
+            req.user.save();
+            console.log("This has already been upvoted!");
+            Comment.findById(id, function (err, comments) {
+                comments.downvote(function (err, comment) {
+                    var uid = comments.owner;
+                    User.findById(uid, function (err, users) {
+                        users.local.upvotes = users.local.upvotes - 1;
+                        users.save();
+                        res.json(comments);
+                    });
+                });
+            });
+        }
+        else {
+            console.log("First time upvoting!");
+            Comment.findById(id, function (err, comments) {
+                comments.upvote(function (err, comment) {
+                    User.findById(comments.owner, function (err, users) {
+                        users.local.upvotes = users.local.upvotes + 1;
+                        req.user.local.upvotedC.push(comments);
+                        req.user.save();
+                        users.save();
+                        res.json(comments);
+                    });
+                });
+            });
+        }
 
-//Post downvotes ---------------------------------------------------->
+    
+    });
+    //Comment upvotes ------------------------------------------------------>
+
+    //Comment downvotes ---------------------------------------------------->
+    app.put('/comments/:downvote/downvote', isLoggedIn, function (req, res) {
+        var id = req.params.downvote;
+        if (contains(req.user.local.downvotedC, id)) {
+            req.user.save();
+            console.log("This has already been downvoted");
+            Comment.findById(id, function (err, comments) {
+                comments.upvote(function (comment, err) {
+                    var uid = comments.owner;
+                    User.findById(uid, function (err, users) {
+                        users.local.upvotes = users.local.upvotes + 1;
+                        users.save();
+                        res.json(comments);
+                    });
+                });
+            });
+        }
+        else {
+            console.log("First time downvoting");
+            Comment.findById(id, function (err, comments) {
+                comments.downvote(function (comment, err) {
+                    var uid = comments.owner;
+                    User.findById(uid, function (err, users) {
+                        users.local.upvotes = users.local.upvotes - 1;
+                        req.user.local.downvotedC.push(comments);
+                        req.user.save();
+                        users.save();
+                        res.json(comments);
+                    });
+                });
+            });
+        }
+
+    
+    });    
+
+    //Comment downvotes ---------------------------------------------------->
+    
+    //Post downvotes ---------------------------------------------------->
    app.put('/posts/:downvote/downvote', isLoggedIn, function(req, res) {
      var id = req.params.downvote;
      if(contains(req.user.local.downvotedP, id)) {

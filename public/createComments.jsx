@@ -52,12 +52,26 @@ var PostFiller = React.createClass({
         });
     },
    
-
+    getLoggedUser : function() {
+   $.ajax({
+            url: '/user',
+            dataType: 'json',
+            success: function(data) {
+			   
+               this.setState({currentuser:data.local});
+			  
+            }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+    },
 
    getInitialState: function() {
        return {
           post: [],
-          user: []
+          user: [],
+		  currentuser : []
           
        }
     },
@@ -65,8 +79,8 @@ var PostFiller = React.createClass({
     componentDidMount: function() {
     this.getUser();
         this.getPost();
-        
-        //setInterval(this.loadPostsFromServer, this.props.pollInterval);
+        this.getLoggedUser();
+		        //setInterval(this.loadPostsFromServer, this.props.pollInterval);
        
     },
 
@@ -77,7 +91,7 @@ var PostFiller = React.createClass({
             
             
             
-            <List posts = {this.state.post} users = {this.state.user} />
+            <Header posts = {this.state.post} users = {this.state.user} user = {this.state.currentuser} />
             </div>
            
             
@@ -89,31 +103,109 @@ var PostFiller = React.createClass({
 });
 
 
-var List = React.createClass({ //has to be called list
+var Header = React.createClass({ //has to be called Header
     
     render: function() {
 
     var j = " " + this.props.posts.body + " ";
-    var post = this.props.posts; 
+    var posts = this.props.posts; 
+	var pid = this.props.posts._id;
+	console.log("PID: " + pid);
     var user = this.props.users;
-    
-    return(
+    var upvoted = this.props.user.upvotedP;
+	var downvoted = this.props.user.downvotedP;
+	var self = this;
 
+	if (upvoted != undefined) {
+	  var style = {
+        color: upvoted.indexOf(posts._id) > -1 ? 'rgb(0, 255, 0)' : 'rgb(64, 77, 91)'
+      };
+
+	  var style2 = {
+	    color: downvoted.indexOf(posts._id) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
+	  }
+	  }
+	 var tag = "#upvote" + posts._id;
+	 var tag2 = "#downvote" + posts._id;
+	 var tag3 = "#numbah" + posts._id;
+	var tracker = posts.upvotes;
+    return(
+	<div>
     <ul className = "list-unstyled">
     {
     
          <div>
    <div className = "inlinegroup"> 
-         <div id = "upvote1" className = "inline"><span id = "upvote1" className = "glyphicon glyphicon-menu-up" 
+         <div id = "upvote1" className = "inline"><span style = {style} id = {"upvote" + posts._id} className = "glyphicon glyphicon-menu-up" 
          onClick =
 {function(event){
 
  
- $.ajax({
-            url:  '/posts/' + post._id + '/upvote',
+$.ajax({
+            url:  '/posts/' + posts._id + '/upvote',
             dataType: 'json',
             type: 'PUT',
             success: function(data) {
+			var color = $(tag).css('color');
+      var color2 = $(tag2).css('color');
+			
+			
+			console.log(tracker);
+			 
+      
+
+	   if (color == "rgb(64, 77, 91)"){
+		  
+          if (color2 == "rgb(255, 0, 0)"){
+
+         
+		   
+            $(tag).css('color', 'rgb(0, 255, 0)');
+            $(tag2).css('color', 'rgb(64, 77, 91)');
+			tracker = tracker + 2;
+            $(tag3).text(tracker);
+            console.log("Hits");
+			
+			console.log(tracker);
+            $.ajax({
+            url:  '/posts/' + posts._id + '/downvote',
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              console.log("We got the downvote nulled");
+
+
+          }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+          }
+
+          else {
+			  $(tag).css('color', 'rgb(0, 255, 0)');
+			   $(tag2).css('color', 'rgb(64, 77, 91)');
+			   tracker = tracker + 1;
+			   console.log(tracker);
+			  $(tag3).text(tracker);
+			  
+			  console.log("Hit");
+			  
+			  }
+      }
+       
+       
+			 
+        else {
+			  console.log("Sup?");
+			  
+			   $(tag).css('color', "rgb(64, 77, 91)");
+         console.log(color2);
+		 tracker = tracker - 1;
+		 console.log(tracker);
+			    $(tag3).text(tracker);
+				
+			  }
               
               console.log("upvoted");
             }.bind(this),
@@ -124,43 +216,87 @@ var List = React.createClass({ //has to be called list
         
 }
 }
-></span></div> <div className ="inline">{post.upvotes} </div> <div className = "inline"><span className = "glyphicon glyphicon-menu-down" 
+></span></div> <div className ="inline"><span id = {"numbah" + posts._id}>{posts.upvotes}</span> </div> <div className = "inline"><span style = {style2} id = {"downvote" + posts._id}className = "glyphicon glyphicon-menu-down" 
 onClick =           
 {function(event){
   
-  var click = 0;
-  click = click + 1;
-console.log(post._id);
+  
+
  $.ajax({
-            url: '/posts/' + post._id + '/downvote',
+            url: '/posts/' + posts._id + '/downvote',
             dataType: 'json',
             type: 'PUT',
             success: function(data) {
               //console.log(data);
               console.log("downvote");
+			  var color = $(tag2).css('color');
+        var color2 = $(tag).css('color');
+        console.log(color);
+        console.log(color2);
+		
+			 if (color == "rgb(64, 77, 91)"){
+          if (color2 == "rgb(0, 255, 0)"){
+
+         
+
+            $(tag2).css('color', 'rgb(255, 0, 0)');
+            $(tag).css('color', 'rgb(64, 77, 91)');
+            tracker = tracker - 2;
+			$(tag3).text(tracker);
+			console.log(tracker);
+            console.log("Hits");
+
+            $.ajax({
+            url:  '/posts/' + posts._id + '/upvote',
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              console.log("We got the upvote nulled");
+
+
+          }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+          }
+
+          else {
+        $(tag).css('color', 'rgb(64, 77, 91)');
+         $(tag2).css('color', 'rgb(255, 0, 0)');
+        tracker = tracker - 1;
+		console.log(tracker);
+		$(tag3).text(tracker);
+        console.log("Hit");
+        }
+      }
+
+			  else {
+			 
+			   $(tag2).css('color', "rgb(64, 77, 91)");
+			   tracker = tracker + 1;
+				console.log(tracker);
+			   $(tag3).text(tracker);
+			  }
+			  
             }.bind(this),
         error: function(xhr, status, err) {
                console.error(this.props.url,status, err.toString());
             }.bind(this)
         });
     
-    var counter = click %2;
-    if(click % 2 != 0) {
-      post.upvotes = post.upvotes + 1;
-
-    }
- 
+  
 }
 }
 
 
-></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
+></span></div></div><li className ="inlinelist" key = {posts._id}> <h4>{posts.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()}</p>
+         <p><a href = {'/posts/' + posts._id} >{posts.allComments} comments</a> Created By: {posts.author} on: {new Date(posts.date).toUTCString()}</p>
          
           </li>
           <div className = "panel panel-primary">
-          <div className = "panel panel-heading">{post.title}</div>
+          <div className = "panel panel-heading">{posts.title}</div>
           <div className = "panel panel-body">
           <div dangerouslySetInnerHTML={{__html : j }} />
           </div>
@@ -173,7 +309,7 @@ console.log(post._id);
      
     }
    </ul>
-
+   </div>
 
     )
 

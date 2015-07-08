@@ -61,6 +61,20 @@ var CommentFiller = React.createClass({
             }.bind(this)
         });
     },
+   getLoggedUser : function() {
+   $.ajax({
+            url: '/user',
+            dataType: 'json',
+            success: function(data) {
+			   
+               this.setState({currentuser:data.local});
+			  
+            }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+    },
    
    getUser : function() {
     $.ajax({
@@ -91,6 +105,7 @@ var CommentFiller = React.createClass({
           post: [],
           user: [],
           comments: [],
+		  currentuser : []
           
        }
     },
@@ -98,6 +113,7 @@ var CommentFiller = React.createClass({
     componentDidMount: function() {
     this.getUser();
         this.getComments();
+		this.getLoggedUser();
         
         
        
@@ -114,7 +130,7 @@ var CommentFiller = React.createClass({
              <CreateComment onCommentSubmit={this.handleCommentSubmit} />
             </div>
             
-            <CommentList comments = {this.state.comments}/>
+            <CommentList comments = {this.state.comments} user = {this.state.currentuser}/>
             </div>
            
             
@@ -128,17 +144,33 @@ var CommentFiller = React.createClass({
 
 var CommentList = React.createClass({ //has to be called list
 		
-		 
-		 
+	
 	
     render : function() {
+		 
+    var upvoted = this.props.user.upvotedC;
+	var downvoted = this.props.user.downvotedC;
+	var self = this;
+
       return( 
 	
 		  <div className = "total">
           <ul className = "list-unstyled">
 		  {
           this.props.comments.map(function(comment) {
-			
+	if (upvoted != undefined) {
+	  var style = {
+        color: upvoted.indexOf(comment._id) > -1 ? 'rgb(0, 255, 0)' : 'rgb(64, 77, 91)'
+      };
+
+	  var style2 = {
+	    color: downvoted.indexOf(comment._id) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
+	  }
+	  }
+	 var tag = "#upvote" + comment._id;
+	 var tag2 = "#downvote" + comment._id;
+	 var tag3 = "#numbah" + comment._id;
+	var tracker = comment.upvotes;
 		 
 			
 		 
@@ -148,23 +180,170 @@ var CommentList = React.createClass({ //has to be called list
 			
 			<div id = {comment._id}>
 			<div className = {"childs" + comment.nthNode} style = {{paddingLeft: 3*comment.nthNode + 'em'}}>
-            <li><a href={"/user/" +comment.owner}><strong>{comment.author}</strong></a> {comment.upvotes+" points"} Posted on {comment.date} <a style = {{fontSize: 0.5 + "em"}}
-			onClick = {function(event){
-				//alert("hello");
-		 var text = "#" + comment._id;
-		 var texted = "#" + comment.pComment;
-		 console.log(text);
-		 
-		 $(text).appendTo(texted);
-				$(text).collapse();
-			
-			
-			}}
+            <li><a href={"/user/" +comment.owner}><strong>{comment.author}</strong></a> <span id = {"numbah" + comment._id}>{comment.upvotes+" points"}</span> Posted on {comment.date} <a style = {{fontSize: 0.5 + "em"}}
 			>(<span className = "glyphicon glyphicon-minus"></span>)</a></li>
 			
 			
 			<li>{comment.body}</li>
-			<li><span id = "upvote1" className = "glyphicon glyphicon-chevron-up"></span>&nbsp;<span id = "upvote1" className = "glyphicon glyphicon-chevron-down"></span>&nbsp;<a  role="button" data-toggle="collapse" href={"#collapseExample" + comment._id} aria-expanded="false" aria-controls="collapseExample">
+			<li><span style = {style} id = {"upvote" + comment._id} className = "glyphicon glyphicon-chevron-up" 
+			onClick =
+{function(event){
+
+ 
+ $.ajax({
+            url:  '/comments/' + comment._id + '/upvote',
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+			var color = $(tag).css('color');
+      var color2 = $(tag2).css('color');
+			
+			
+			console.log(tracker);
+			
+      
+
+	   if (color == "rgb(64, 77, 91)"){
+		  
+          if (color2 == "rgb(255, 0, 0)"){
+
+         
+		   
+            $(tag).css('color', 'rgb(0, 255, 0)');
+            $(tag2).css('color', 'rgb(64, 77, 91)');
+			tracker = tracker + 2;
+            $(tag3).text(tracker);
+            console.log("Hits");
+			
+			console.log(tracker);
+            $.ajax({
+            url:  '/comments/' + comments._id + '/downvote',
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              console.log("We got the downvote nulled");
+
+
+          }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+          }
+
+          else {
+			  $(tag).css('color', 'rgb(0, 255, 0)');
+			   $(tag2).css('color', 'rgb(64, 77, 91)');
+			   tracker = tracker + 1;
+			   console.log(tracker);
+			  $(tag3).text(tracker);
+			  
+			  console.log("Hit");
+			  
+			  }
+      }
+       
+       
+			 
+        else {
+			  console.log("Sup?");
+			  
+			   $(tag).css('color', "rgb(64, 77, 91)");
+         console.log(color2);
+		 tracker = tracker - 1;
+		 console.log(tracker);
+			    $(tag3).text(tracker);
+				
+			  }
+              
+              console.log("upvoted");
+            }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+        
+}
+}
+			
+			
+			></span>&nbsp;<span style = {style2} id = {"downvote" + comment._id} className = "glyphicon glyphicon-chevron-down"
+			onClick =           
+{function(event){
+	
+	
+
+ $.ajax({
+            url: '/comments/' + comment._id + '/downvote',
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              //console.log(data);
+              console.log("downvote");
+			  var color = $(tag2).css('color');
+        var color2 = $(tag).css('color');
+        console.log(color);
+        console.log(color2);
+		
+			 if (color == "rgb(64, 77, 91)"){
+          if (color2 == "rgb(0, 255, 0)"){
+
+         
+
+            $(tag2).css('color', 'rgb(255, 0, 0)');
+            $(tag).css('color', 'rgb(64, 77, 91)');
+            tracker = tracker - 2;
+			$(tag3).text(tracker);
+			console.log(tracker);
+            console.log("Hits");
+
+            $.ajax({
+            url:  '/comments/' + comment._id + '/upvote',
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              console.log("We got the upvote nulled");
+
+
+          }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+          }
+
+          else {
+        $(tag).css('color', 'rgb(64, 77, 91)');
+         $(tag2).css('color', 'rgb(255, 0, 0)');
+        tracker = tracker - 1;
+		console.log(tracker);
+		$(tag3).text(tracker);
+        console.log("Hit");
+        }
+      }
+
+			  else {
+			 
+			   $(tag2).css('color', "rgb(64, 77, 91)");
+			   tracker = tracker + 1;
+				console.log(tracker);
+			   $(tag3).text(tracker);
+			  }
+			  
+            }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+ 		
+ 		
+ 
+}
+}
+
+			
+			
+			></span>&nbsp;<a  role="button" data-toggle="collapse" href={"#collapseExample" + comment._id} aria-expanded="false" aria-controls="collapseExample">
   Reply
 </a></li>
 			<div className="collapse" id={"collapseExample" + comment._id}>
