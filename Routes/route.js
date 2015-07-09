@@ -370,7 +370,37 @@ app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
     });
     res.json(req.body);
 });
-
+    //edit post
+    app.post('/edit/:user/:id', function (req, res) {
+        var user = req.params.user;
+        var pid = req.params.id;
+        
+      
+            Post.findById(pid, function (err, post) {
+                post.body = req.body.body;
+                post.title = req.body.title;
+                post.save();
+            res.json(post);
+                //res.redirect('/posts/' + pid)
+            });
+        
+    });
+    
+    app.get('/edit/:user/:id', isLoggedIn, function (req, res) {
+        if (req.user == undefined) {
+            res.redirect('/');
+        }
+        if (req.params.user != req.user._id) {
+            res.redirect('/');
+        }
+        else {
+            res.render('editPost.ejs', {
+                user : req.user,
+                message: req.flash('loginMessage'),
+                smessage : req.flash('signupMessage')
+            });
+        }
+    });
     app.post('/posts/:id', isLoggedIn, function (req, res) {
         console.log(req.body);
         var id = req.params.id;

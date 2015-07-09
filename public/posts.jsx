@@ -77,7 +77,7 @@ console.log(updatedList);
             dataType: 'json',
             success: function(data) {
 			   
-               this.setState({user:data.local});
+               this.setState({user:data.local, uid:data});
 			   upvotedP = this.state.user.upvotedP;
 			   downvotedP = this.state.user.downvotedP;
             }.bind(this),
@@ -92,7 +92,8 @@ console.log(updatedList);
        return {
           posts: [],
           items: [],
-		  user:  []
+		  user:  [],
+		  uid: []
        }
     },
 
@@ -150,7 +151,7 @@ console.log(updatedList);
             <hr/>
             <div className = "Posts">
             
-            <List7 user = {this.state.user} posts = {this.state.items} />
+            <List7 user = {this.state.user} posts = {this.state.items} uid = {this.state.uid} />
             </div>
            
            
@@ -167,8 +168,11 @@ var List7 = React.createClass({ //has to be called list
 
     render: function() {
 	
+	var usey = this.props.user;
+	var uid = this.props.uid._id;
     var upvoted = this.props.user.upvotedP;
 	var downvoted = this.props.user.downvotedP;
+	var myposts = this.props.user.posts;
 	var self = this;
 	
 	
@@ -183,6 +187,8 @@ var List7 = React.createClass({ //has to be called list
      this.props.posts.map(function(post) {
 	 
 	 console.log(upvoted);
+	 
+	 console.log(uid);
 	 if (upvoted != undefined) {
 	  var style = {
         color: upvoted.indexOf(post._id) > -1 ? 'rgb(0, 255, 0)' : 'rgb(64, 77, 91)'
@@ -191,7 +197,18 @@ var List7 = React.createClass({ //has to be called list
 	  var style2 = {
 	    color: downvoted.indexOf(post._id) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
 	  }
+	  var edit = {
+	     display: myposts.indexOf(post._id) > -1 ? '' : 'None'
+	   }
 	  }
+	  else {
+	  
+	   var edit = {
+	     display: 'None'
+	  }
+	  }
+	 
+	 
 	 var tag = "#upvote" + post._id;
 	 var tag2 = "#downvote" + post._id;
 	 var tag3 = "#numbah" + post._id;
@@ -487,7 +504,7 @@ console.log(post._id);
 
 ></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()} </p>
+         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()} <a className = "tryingtohide" href = {"/edit/" +uid +"/"+post._id} id = {"edit" + post._id} style = {edit}>Edit</a></p>
          
           </li>
 </div>

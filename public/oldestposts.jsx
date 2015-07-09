@@ -77,7 +77,7 @@ console.log(updatedList);
             dataType: 'json',
             success: function(data) {
 			   
-               this.setState({user:data.local});
+               this.setState({user : data.local, uid : data});
 			   upvotedP = this.state.user.upvotedP;
 			   downvotedP = this.state.user.downvotedP;
             }.bind(this),
@@ -92,6 +92,7 @@ console.log(updatedList);
        return {
           posts: [],
           items: [],
+		  uid:   [],
 		  user:  []
        }
     },
@@ -150,7 +151,7 @@ console.log(updatedList);
             <hr/>
             <div className = "Posts">
             
-            <ListTres user = {this.state.user} posts = {this.state.items} />
+            <ListTres user = {this.state.user} posts = {this.state.items} uid = {this.state.uid}/>
             </div>
            
            
@@ -170,8 +171,8 @@ var ListTres = React.createClass({ //has to be called list
     var upvoted = this.props.user.upvotedP;
 	var downvoted = this.props.user.downvotedP;
 	var self = this;
-	
-	
+	var myposts = this.props.user.posts;
+	var uid = this.props.uid._id;
 	 
   
     return(
@@ -190,6 +191,16 @@ var ListTres = React.createClass({ //has to be called list
 
 	  var style2 = {
 	    color: downvoted.indexOf(post._id) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
+	  }
+	   var edit = {
+	     display: myposts.indexOf(post._id) > -1 ? '' : 'None'
+	   }
+	  }
+
+	  else {
+	  
+	   var edit = {
+	     display: 'None'
 	  }
 	  }
 	 var tag = "#upvote" + post._id;
@@ -487,7 +498,7 @@ console.log(post._id);
 
 ></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()} </p>
+         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()} <a href = {"/edit/" +uid +"/"+post._id} id = {"edit" + post._id} style = {edit}>Edit</a></p>
          
           </li>
 </div>
