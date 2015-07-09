@@ -276,35 +276,12 @@
     });
  });
 
- /*app.get('/posts/:posts/getPost/comments', function(req, res) {
-    var id = req.params.posts;
-    var array = [];
-    var totalproc = 0;
-    Post.findById(id, function(err, posts) {
-        if(posts.comments.length == 0) {
-            res.json(array);
-        }
-
-        console.log(posts.comments[0]);
-        posts.comments.forEach(function(comment) {
-            
-             Comment.findById(comment._id, function (err, com) {
-                console.log(com);
-                if(!err){
-                array.push(com);
-                totalproc = totalproc + 1;
-                }
-                if(totalproc == posts.comments.length){
-                    res.json(array);
-                }
-
-             });
+    app.get('/comment/:comment/getComment', function (req, res) {
+        var id = req.params.comment;
+        Comment.findById(id, function (err, comments) {
+            res.json(comments);
         });
-       
-    
     });
- });
-*/
 
 
 app.get('/posts/:posts/getPost/comments', function(req, res) {
@@ -386,6 +363,21 @@ app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
         
     });
     
+    app.post('/editC/:user/:id', function (req, res) {
+        var user = req.params.user;
+        var cid = req.params.id;
+        
+        
+        Comment.findById(cid, function (err, comment) {
+            comment.body = req.body.body;
+            
+            comment.save();
+            res.json(comment);
+                //res.redirect('/posts/' + pid)
+        });
+        
+    });
+    
     app.get('/edit/:user/:id', isLoggedIn, function (req, res) {
         if (req.user == undefined) {
             res.redirect('/');
@@ -395,6 +387,22 @@ app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
         }
         else {
             res.render('editPost.ejs', {
+                user : req.user,
+                message: req.flash('loginMessage'),
+                smessage : req.flash('signupMessage')
+            });
+        }
+    });
+    
+    app.get('/editc/:user/:id', isLoggedIn, function (req, res) {
+        if (req.user == undefined) {
+            res.redirect('/');
+        }
+        if (req.params.user != req.user._id) {
+            res.redirect('/');
+        }
+        else {
+            res.render('editComment.ejs', {
                 user : req.user,
                 message: req.flash('loginMessage'),
                 smessage : req.flash('signupMessage')
@@ -417,6 +425,8 @@ app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
         Post.findById(id, function (err, post) {
             post.allComments = post.allComments + 1;
             post.save();
+            req.user.local.comments.push(comments);
+            req.user.save();
             comments.post = post;
             Comment.findById(req.body.parentCommentId, function (err, comm) {
                 comments.nthNode = comm.nthNode + 1;

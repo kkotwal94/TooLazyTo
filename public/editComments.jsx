@@ -1,12 +1,13 @@
 ﻿var link = window.location.href;
 var array = link.split('/');
-var sub = "/edit/" +array[array.length-2] + "/" + array[array.length-1];
+var sub = "/editC/" +array[array.length-2] + "/" + array[array.length-1];
 var dub = array[array.length-1];
+var previous;
 console.log(dub);
 console.log(sub);
 var name;
 var href;
-var EditProfile = React.createClass({
+var EditComment = React.createClass({
 loadUserFromServer : function() {
 	$.ajax({
 		url: '/user',
@@ -24,15 +25,16 @@ loadUserFromServer : function() {
 	});
 },
 
-getPost : function() {
+getComment : function() {
       $.ajax({
-            url: '/posts/' + dub + '/getPost',
+            url: '/comment/' + dub + '/getComment',
             dataType: 'json',
             success: function(data) {
                
    
                console.log(data);
-               this.setState({post:data});
+               this.setState({comment:data});
+			   previous = data.post;
                
             }.bind(this),
         error: function(xhr, status, err) {
@@ -45,17 +47,17 @@ getInitialState: function() {
     return {
 	 
 	  users: [],
-	  post:  []
+	  comment:  []
 	};
 },
 
 componentDidMount: function() {
        
 		this.loadUserFromServer();
-		this.getPost();
+		this.getComment();
 	
     },
-handlePSubmit : function(data,callback) {
+handleCSubmit : function(data,callback) {
     
 	$.ajax({
 	    url: sub, 
@@ -66,7 +68,7 @@ handlePSubmit : function(data,callback) {
 			
 					callback;  
 
-					window.location.href = '/posts/' + dub;
+					window.location.href = '/posts/' + previous;
 					},
 		error: function(xhr, status, err) {
 		console.log("failed");
@@ -85,9 +87,9 @@ handlePSubmit : function(data,callback) {
 			
 			
 			<hr/>
-			<EditForm onSubmit={this.handlePSubmit} user = {this.state.users}/>
+			<EditCommentForm onSubmit={this.handleCSubmit} user = {this.state.users}/>
 			<hr/>
-			<EditViews user = {this.state.users} posts = {this.state.post}/>
+			<EditCommentViews user = {this.state.users} comments = {this.state.comment}/>
 			
 
 			
@@ -104,19 +106,19 @@ handlePSubmit : function(data,callback) {
 
 
 
-var EditForm = React.createClass({
+var EditCommentForm = React.createClass({
 
      handleSubmit : function(e) {
        e.preventDefault();
-       var title  = React.findDOMNode(this.refs.title).value.trim();
+       
        var body   = React.findDOMNode(this.refs.body).value.trim();
       
-       if(!title || !body) {
-		  alert("You have to complete all fields!");
+       if(!body) {
+		  
           return;
        }
-       this.props.onSubmit({title:title, body:body});
-       React.findDOMNode(this.refs.title).value = '';
+       this.props.onSubmit({body:body});
+       
        React.findDOMNode(this.refs.body).value = '';
        
        },
@@ -124,14 +126,10 @@ var EditForm = React.createClass({
        return (
 	   <div>
          <form className="postForm" onSubmit={this.handleSubmit}>
-		  <div class="form-group">
-			<label>Thread Name</label>
-            <input type = "text" className = "form-control" placeholder="Title..." ref="title"/>
-         </div>
 		 <div class="form-group">
 			<label>Enter body here</label>
 			<div id = "ck">
-            <textarea id = "ckedit2" className = "form-control" placeholder="Say Something for post body.." ref="body"></textarea>
+            <textarea id = "ckedit3" className = "form-control" placeholder="Say Something for post body.." ref="body"></textarea>
 		    </div>
 		</div>
             <button type = "submit" className = "btn btn-primary" value="Post">Submit!</button>
@@ -141,47 +139,69 @@ var EditForm = React.createClass({
   }
  });
 
-	var EditViews = React.createClass ({
+	var EditCommentViews = React.createClass ({
 
 		render: function() {
 
-    var j = " " + this.props.posts.body + " ";
-    var posts = this.props.posts; 
-	var pid = this.props.posts._id;
-	console.log("PID: " + pid);
+    var j = " " + this.props.comments.body + " ";
+    var comment = this.props.comments; 
+	var cid = this.props.comments._id;
+	console.log("CID: " + cid);
     var user = this.props.user;
 	var uid = this.props.user._id;
-    var upvoted = this.props.user.upvotedP;
-	var downvoted = this.props.user.downvotedP;
+	var userComments = this.props.user.comments;
+    var upvoted = this.props.user.upvotedC;
+	var downvoted = this.props.user.downvotedC;
 	var self = this;
 
 	if (upvoted != undefined) {
 	  var style = {
-        color: upvoted.indexOf(posts._id) > -1 ? 'rgb(0, 255, 0)' : 'rgb(64, 77, 91)'
+        color: upvoted.indexOf(cid) > -1 ? 'rgb(0, 255, 0)' : 'rgb(64, 77, 91)'
       };
 
 	  var style2 = {
-	    color: downvoted.indexOf(posts._id) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
+	    color: downvoted.indexOf(cid) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
 	  }
 	  }
-	 var tag = "#upvote" + posts._id;
-	 var tag2 = "#downvote" + posts._id;
-	 var tag3 = "#numbah" + posts._id;
-	var tracker = posts.upvotes;
-    return(
-	<div>
-    <ul className = "list-unstyled">
-    {
-    
-         <div>
-   <div className = "inlinegroup"> 
-         <div id = "upvote1" className = "inline"><span style = {style} id = {"upvote" + posts._id} className = "glyphicon glyphicon-menu-up" 
-         onClick =
+	 var tag = "#upvote" + comment._id;
+	 var tag2 = "#downvote" + comment._id;
+	 var tag3 = "#numbah" + comment._id;
+	var tracker = comment.upvotes;
+	
+		 
+		 if(upvoted!= undefined) {
+		  var edit = {
+	     display: userComments.indexOf(comment._id) > -1 ? '' : 'None'
+	   }
+	  }
+	  else {
+	  
+	   var edit = {
+	     display: 'None'
+	  }
+	  }
+		 
+			
+		 
+		  return(
+			
+			<div className = "userComments">
+			
+			<div id = {comment._id}>
+			<div className = {"childs" + comment.nthNode} >
+			
+            <p><a href={"/user/" +comment.owner}><strong>{comment.author}</strong></a> <span id = {"numbah" + comment._id}>{comment.upvotes+" points"}</span> Posted on {comment.date} <a style = {{fontSize: 0.5 + "em"}}
+			>(<span className = "glyphicon glyphicon-minus"></span>)</a></p>
+			
+			
+			<div dangerouslySetInnerHTML={{__html : j }} />
+		    <p><span style = {style} id = {"upvote" + comment._id} className = "glyphicon glyphicon-chevron-up" 
+			onClick =
 {function(event){
 
  
-$.ajax({
-            url:  '/posts/' + posts._id + '/upvote',
+ $.ajax({
+            url:  '/comments/' + comment._id + '/upvote',
             dataType: 'json',
             type: 'PUT',
             success: function(data) {
@@ -190,7 +210,7 @@ $.ajax({
 			
 			
 			console.log(tracker);
-			 
+			
       
 
 	   if (color == "rgb(64, 77, 91)"){
@@ -207,7 +227,7 @@ $.ajax({
 			
 			console.log(tracker);
             $.ajax({
-            url:  '/posts/' + posts._id + '/downvote',
+            url:  '/comments/' + comments._id + '/downvote',
             dataType: 'json',
             type: 'PUT',
             success: function(data) {
@@ -255,14 +275,16 @@ $.ajax({
         
 }
 }
-></span></div> <div className ="inline"><span id = {"numbah" + posts._id}>{posts.upvotes}</span> </div> <div className = "inline"><span style = {style2} id = {"downvote" + posts._id}className = "glyphicon glyphicon-menu-down" 
-onClick =           
+			
+			
+			></span>&nbsp;<span style = {style2} id = {"downvote" + comment._id} className = "glyphicon glyphicon-chevron-down"
+			onClick =           
 {function(event){
-  
-  
+	
+	
 
  $.ajax({
-            url: '/posts/' + posts._id + '/downvote',
+            url: '/comments/' + comment._id + '/downvote',
             dataType: 'json',
             type: 'PUT',
             success: function(data) {
@@ -286,7 +308,7 @@ onClick =
             console.log("Hits");
 
             $.ajax({
-            url:  '/posts/' + posts._id + '/upvote',
+            url:  '/comments/' + comment._id + '/upvote',
             dataType: 'json',
             type: 'PUT',
             success: function(data) {
@@ -323,40 +345,43 @@ onClick =
                console.error(this.props.url,status, err.toString());
             }.bind(this)
         });
-    
-  
+ 		
+ 		
+ 
 }
 }
 
-
-></span></div></div><li className ="inlinelist" key = {posts._id}> <h4>{posts.title}</h4>
-
-         <p><a href = {'/posts/' + posts._id} >{posts.allComments} comments</a> Created By: {posts.author} on: {new Date(posts.date).toUTCString()}</p>
-         
-          </li>
-          <div className = "panel panel-primary">
-          <div className = "panel panel-heading">{posts.title}</div>
-          <div className = "panel panel-body">
-          <div dangerouslySetInnerHTML={{__html : j }} />
-          </div>
-          <div className = "panel panel-footer">
-          <a href = {href}>View : {name}s profile</a> or <a>Give this user some Karma</a>
-          </div>
-          </div>
-</div>
-         
-     
+			
+			
+			></span>&nbsp;<a  role="button" data-toggle="collapse" href={"#collapseExample" + comment._id} aria-expanded="false" aria-controls="collapseExample">
+  Reply
+</a></p>
+			<div className="collapse" id={"collapseExample" + comment._id}>
+			<div id = "reply">
+			<form   method = "post" id = "contactForm">
+			<div className = "form-group">
+			<input type="hidden" name="parentCommentId" value ={comment._id} />
+			<textarea name = "body"></textarea>
+			</div>
+			 
+			<button type = "submit" className = "btn btn-primary">
+			Save</button>
+			</form>
+			</div>
+			
+			</div>
+			</div>
+			</div>
+			
+			</div>
+			
+			 
+        )
     }
-   </ul>
-   </div>
+  });
 
-    )
-
-    }
-  
-   });
-React.render(<EditProfile  />,
-document.getElementById('editPost'));
+React.render(<EditComment  />,
+document.getElementById('editComments'));
 
 Array.prototype.remove = function(from, to) {
   var rest = this.slice((to || from) + 1 || this.length);
@@ -366,7 +391,7 @@ Array.prototype.remove = function(from, to) {
 
 
 $(document).ready(function () {
-		AlloyEditor.editable('ckedit2', {
+		AlloyEditor.editable('ckedit3', {
 		
                 toolbars: {
 

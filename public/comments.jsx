@@ -8,6 +8,7 @@ var name;
 var href;
 var finalData = [];
 var d_id;
+var uid;
 var counter = 0;
 console.log(sub);
 
@@ -72,7 +73,7 @@ var CommentFiller = React.createClass({
             success: function(data) {
 			   
                this.setState({currentuser:data.local});
-			  
+			  uid = data._id;
             }.bind(this),
         error: function(xhr, status, err) {
                console.error(this.props.url,status, err.toString());
@@ -154,6 +155,8 @@ var CommentList = React.createClass({ //has to be called list
 		 
     var upvoted = this.props.user.upvotedC;
 	var downvoted = this.props.user.downvotedC;
+	var userComments = this.props.user.comments;
+	/*var uid = this.props.user._id;*/
 	var self = this;
 
       return( 
@@ -171,12 +174,26 @@ var CommentList = React.createClass({ //has to be called list
 	    color: downvoted.indexOf(comment._id) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
 	  }
 	  }
+	
 	 var tag = "#upvote" + comment._id;
 	 var tag2 = "#downvote" + comment._id;
 	 var tag3 = "#numbah" + comment._id;
 	var tracker = comment.upvotes;
+	
 		 
-			
+		 if(upvoted!= undefined) {
+		  var edit = {
+	     display: userComments.indexOf(comment._id) > -1 ? '' : 'None'
+	   }
+	  }
+	  else {
+	  
+	   var edit = {
+	     display: 'None'
+	  }
+	  }
+		 
+		 //editor1 = AlloyEditor.editable('ckedit' + comment._id);
 		 
 		  return(
 			
@@ -188,7 +205,7 @@ var CommentList = React.createClass({ //has to be called list
 			>(<span className = "glyphicon glyphicon-minus"></span>)</a></li>
 			
 			
-			<li>{comment.body}</li>
+			<li><div dangerouslySetInnerHTML={{__html : comment.body }} /></li>
 			<li><span style = {style} id = {"upvote" + comment._id} className = "glyphicon glyphicon-chevron-up" 
 			onClick =
 {function(event){
@@ -349,13 +366,13 @@ var CommentList = React.createClass({ //has to be called list
 			
 			></span>&nbsp;<a  role="button" data-toggle="collapse" href={"#collapseExample" + comment._id} aria-expanded="false" aria-controls="collapseExample">
   Reply
-</a></li>
+</a>&nbsp;<span style = {edit}><a href ={'/editC/' + uid + '/' + comment._id }>Edit Comment</a></span></li>
 			<div className="collapse" id={"collapseExample" + comment._id}>
 			<div id = "reply">
 			<form   method = "post" id = "contactForm">
 			<div className = "form-group">
 			<input type="hidden" name="parentCommentId" value ={comment._id} />
-			<textarea name = "body"></textarea>
+			<textarea id = {"ckedit" + comment._id} name = "body"></textarea>
 			</div>
 			 
 			<button type = "submit" className = "btn btn-primary">

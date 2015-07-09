@@ -6,6 +6,8 @@ var postInterval = 1000;
 var id = '/posts/' + sub + '/getPost';
 var name;
 var href;
+var href2;
+var myposts;
 console.log(sub);
 
 var PostFiller = React.createClass({
@@ -41,7 +43,8 @@ var PostFiller = React.createClass({
                
                name = data.local.email;
                href = '/user/' + data._id;
-
+			   
+			   myposts = data.local.posts;
                this.setState({user:data});
                
             }.bind(this),
@@ -59,7 +62,7 @@ var PostFiller = React.createClass({
             success: function(data) {
 			   
                this.setState({currentuser:data.local});
-			  
+			  href2 = data._id;
             }.bind(this),
         error: function(xhr, status, err) {
                console.error(this.props.url,status, err.toString());
@@ -109,9 +112,11 @@ var Header = React.createClass({ //has to be called Header
 
     var j = " " + this.props.posts.body + " ";
     var posts = this.props.posts; 
+	
 	var pid = this.props.posts._id;
 	console.log("PID: " + pid);
     var user = this.props.users;
+	var currentuserposts = this.props.user.posts;
     var upvoted = this.props.user.upvotedP;
 	var downvoted = this.props.user.downvotedP;
 	var self = this;
@@ -123,6 +128,15 @@ var Header = React.createClass({ //has to be called Header
 
 	  var style2 = {
 	    color: downvoted.indexOf(posts._id) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
+	  }
+	  var edit = {
+	     display: currentuserposts.indexOf(posts._id) > -1 ? '' : 'None'
+	   }
+	  }
+	  else {
+	  
+	   var edit = {
+	     display: 'None'
 	  }
 	  }
 	 var tag = "#upvote" + posts._id;
@@ -301,7 +315,7 @@ onClick =
           <div dangerouslySetInnerHTML={{__html : j }} />
           </div>
           <div className = "panel panel-footer">
-          <a href = {href}>View : {name}s profile</a> or <a>Give this user some Karma</a>
+          <a href = {href}>View : {name}s profile</a> or <a>Give this user some Karma</a> <span style = {edit}>Since this is your post: <a href = {'/edit/' + href2 + '/' + posts._id} >Edit Post</a></span>
           </div>
           </div>
 </div>
