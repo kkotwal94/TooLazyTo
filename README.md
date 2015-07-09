@@ -12,9 +12,10 @@ Original Project : https://github.com/keithyong/too-lazy
 * Allow users to upload images or icons for their profile pic
 * At the end of project remember to use compiled versions of css, and webpack everything
 * Incorporate alloy editor for each text area that is opened up, therefore having multiple alloyeditors
-* Add upvote system for comments as well, make the arrows change to green and red when hit, and store it in session
 * Potential subreddits, I don't know doesn't seem worth it?
-* Add in SCASS for some kind of object oriented css like structure (it extends css)
+* Add delete operation of posts and comments (handle those who try to comment / upvote posts that had JUST been deleted)
+* Finish comment tree collapse for comments (almost done)
+
 
 
 
