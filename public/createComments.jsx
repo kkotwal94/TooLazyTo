@@ -24,10 +24,11 @@ var PostFiller = React.createClass({
    
                
                this.setState({post:data});
-               
+               console.log(data);
             }.bind(this),
         error: function(xhr, status, err) {
                console.error(this.props.url,status, err.toString());
+               window.location.href = "/postDoesntExists";
             }.bind(this)
         });
     },
@@ -50,6 +51,7 @@ var PostFiller = React.createClass({
             }.bind(this),
         error: function(xhr, status, err) {
                 console.log("error");
+                window.location.href = "/postDoesntExist";
                console.error(this.props.url,status, err.toString());
             }.bind(this)
         });
@@ -61,7 +63,8 @@ var PostFiller = React.createClass({
             dataType: 'json',
             success: function(data) {
 			   
-               this.setState({currentuser:data.local});
+               this.setState({currentuser:data.local, userid : data});
+
 			  href2 = data._id;
             }.bind(this),
         error: function(xhr, status, err) {
@@ -74,7 +77,8 @@ var PostFiller = React.createClass({
        return {
           post: [],
           user: [],
-		  currentuser : []
+		  currentuser : [],
+      userid: [],
           
        }
     },
@@ -94,7 +98,7 @@ var PostFiller = React.createClass({
             
             
             
-            <Header posts = {this.state.post} users = {this.state.user} user = {this.state.currentuser} />
+            <Header posts = {this.state.post} users = {this.state.user} user = {this.state.currentuser} userid = {this.state.userid}/>
             </div>
            
             
@@ -117,9 +121,12 @@ var Header = React.createClass({ //has to be called Header
 	console.log("PID: " + pid);
     var user = this.props.users;
 	var currentuserposts = this.props.user.posts;
+  var realhref = this.props.userid._id;
     var upvoted = this.props.user.upvotedP;
 	var downvoted = this.props.user.downvotedP;
 	var self = this;
+
+  console.log(realhref);
 
 	if (upvoted != undefined) {
 	  var style = {
@@ -315,7 +322,7 @@ onClick =
           <div dangerouslySetInnerHTML={{__html : j }} />
           </div>
           <div className = "panel panel-footer">
-          <a href = {href}>View : {name}s profile</a> or <a>Give this user some Karma</a> <span style = {edit}>Since this is your post: <a href = {'/edit/' + href2 + '/' + posts._id} >Edit Post</a></span>
+          <a href = {href}>View : {name}s profile</a> or <a>Give this user some Karma</a> <span style = {edit}>Since this is your post: <a href = {'/edit/' + realhref + '/' + posts._id} >Edit Post</a></span>
           </div>
           </div>
 </div>

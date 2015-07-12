@@ -117,6 +117,7 @@ console.log(updatedList);
             <div className="form-group">
 				<button for="collapseFive" className="btn btn-default" data-toggle="collapse" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">SEARCH!</button>
 					<div id="collapseFive" className="collapse">
+          
 					<span className="input input--hoshi">
 					<input className="input__field input__field--hoshi" type="text" id="input-4" onChange = {this.authorList}/>
 					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-4">
@@ -125,20 +126,20 @@ console.log(updatedList);
 					</span>
 						
 						<span className="input input--hoshi">
-					<input className="input__field input__field--hoshi" type="text" id="input-4" onChange = {this.titleList}/>
-					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-4">
+					<input className="input__field input__field--hoshi" type="text" id="input-5" onChange = {this.titleList}/>
+					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-5">
 						<span className="input__label-content input__label-content--hoshi">Search by Title!</span>
 					</label>
 					</span>
 						<span className="input input--hoshi">
-					<input className="input__field input__field--hoshi" type="text" id="input-4" onChange = {this.dateList}/>
-					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-4">
+					<input className="input__field input__field--hoshi" type="text" id="input-6" onChange = {this.dateList}/>
+					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-6">
 						<span className="input__label-content input__label-content--hoshi">Search by Date!</span>
 					</label>
 					</span>
 						<span className="input input--hoshi">
-					<input className="input__field input__field--hoshi" type="text" id="input-4" onChange = {this.upvotesList}/>
-					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-4">
+					<input className="input__field input__field--hoshi" type="text" id="input-7" onChange = {this.upvotesList}/>
+					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-7">
 						<span className="input__label-content input__label-content--hoshi">Search by Upvotes!</span>
 					</label>
 					</span>
@@ -198,7 +199,8 @@ var List7 = React.createClass({ //has to be called list
 	    color: downvoted.indexOf(post._id) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
 	  }
 	  var edit = {
-	     display: myposts.indexOf(post._id) > -1 ? '' : 'None'
+	     display: myposts.indexOf(post._id) > -1 ? '' : 'None',
+	     fontSize: '10px'
 	   }
 	  }
 	  else {
@@ -504,7 +506,37 @@ console.log(post._id);
 
 ></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()} <a className = "tryingtohide" href = {"/edit/" +uid +"/"+post._id} id = {"edit" + post._id} style = {edit}>Edit</a></p>
+         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()} <a className = "tryingtohide" href = {"/edit/" +uid +"/"+post._id} id = {"edit" + post._id} style = {edit}>Edit</a> &nbsp;
+         <a className = "tryingtohide"  id = {"delete" + post._id} style = {edit} onClick = 
+         {function(event) {
+          var x = confirm("Are you sure you want to delete this post?");
+          if(x == true) {
+            
+            $.ajax({
+            url:  '/posts/delete/' +uid+"/"+ post._id ,
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              console.log("We got post deleted?");
+
+
+          }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+          
+            window.location.href = window.location.href;
+
+          }
+
+          else {
+            alert("Guess we wont then");
+          }
+         }}
+
+          >Delete</a>
+         </p>
          
           </li>
 </div>
@@ -545,3 +577,37 @@ if( a.date  < b.date) return -1;
 if (a.date > b.date) return 1;
 return 0;
 }
+
+(function() {
+        // trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+        if (!String.prototype.trim) {
+          (function() {
+            // Make sure we trim BOM and NBSP
+            var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+            String.prototype.trim = function() {
+              return this.replace(rtrim, '');
+            };
+          })();
+        }
+
+        [].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
+          // in case the input is already filled..
+          if( inputEl.value.trim() !== '' ) {
+            classie.add( inputEl.parentNode, 'input--filled' );
+          }
+
+          // events:
+          inputEl.addEventListener( 'focus', onInputFocus );
+          inputEl.addEventListener( 'blur', onInputBlur );
+        } );
+
+        function onInputFocus( ev ) {
+          classie.add( ev.target.parentNode, 'input--filled' );
+        }
+
+        function onInputBlur( ev ) {
+          if( ev.target.value.trim() === '' ) {
+            classie.remove( ev.target.parentNode, 'input--filled' );
+          }
+        }
+      })();

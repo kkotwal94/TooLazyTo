@@ -222,7 +222,7 @@ var EditCommentForm = React.createClass({
             $(tag).css('color', 'rgb(0, 255, 0)');
             $(tag2).css('color', 'rgb(64, 77, 91)');
 			tracker = tracker + 2;
-            $(tag3).text(tracker);
+            $(tag3).text(tracker+ " points");
             console.log("Hits");
 			
 			console.log(tracker);
@@ -246,7 +246,7 @@ var EditCommentForm = React.createClass({
 			   $(tag2).css('color', 'rgb(64, 77, 91)');
 			   tracker = tracker + 1;
 			   console.log(tracker);
-			  $(tag3).text(tracker);
+			  $(tag3).text(tracker+ " points");
 			  
 			  console.log("Hit");
 			  
@@ -262,7 +262,7 @@ var EditCommentForm = React.createClass({
          console.log(color2);
 		 tracker = tracker - 1;
 		 console.log(tracker);
-			    $(tag3).text(tracker);
+			    $(tag3).text(tracker+ " points");
 				
 			  }
               
@@ -303,7 +303,7 @@ var EditCommentForm = React.createClass({
             $(tag2).css('color', 'rgb(255, 0, 0)');
             $(tag).css('color', 'rgb(64, 77, 91)');
             tracker = tracker - 2;
-			$(tag3).text(tracker);
+			$(tag3).text(tracker+ " points");
 			console.log(tracker);
             console.log("Hits");
 
@@ -326,7 +326,7 @@ var EditCommentForm = React.createClass({
         $(tag).css('color', 'rgb(64, 77, 91)');
          $(tag2).css('color', 'rgb(255, 0, 0)');
         tracker = tracker - 1;
-		console.log(tracker);
+		console.log(tracker+ " points");
 		$(tag3).text(tracker);
         console.log("Hit");
         }
@@ -337,7 +337,7 @@ var EditCommentForm = React.createClass({
 			   $(tag2).css('color', "rgb(64, 77, 91)");
 			   tracker = tracker + 1;
 				console.log(tracker);
-			   $(tag3).text(tracker);
+			   $(tag3).text(tracker+ " points");
 			  }
 			  
             }.bind(this),

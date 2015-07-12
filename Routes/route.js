@@ -9,8 +9,18 @@
     var Promise = require('bluebird');
     var mongoose = require('mongoose');
     Promise.promisifyAll(mongoose);
+    var deep = ".comments";
+    var longpath = repeat(deep, 100);
+    var comments = 'comments' + longpath;
+    //console.log(comments);
+    app.get('/postDoesntExist', function(req, res) {
+        res.render('pageDoesNotExist.ejs',{
+            message: req.flash('loginMessage'),
+            smessage : req.flash('signupMessage'),
+            user     : req.user }
 
-    
+            );
+    });
     
     app.get('/', function (req, res) {
         res.render('index.ejs', {
@@ -76,15 +86,15 @@
     });
 
     app.post('/posts', isLoggedIn, function (req, res) {
-        console.log(req.body);
+        
         var posts = new Post(req.body);
         var myDate = Date();
         posts.date = myDate;
-        console.log(posts);
+        
         
        
         User.findById(req.user.id, function (err, user) {
-            console.log(user);
+            
             user.local.posts.push(posts);
             user.local.postsCount = user.local.postsCount + 1;
             posts.author = user.local.email;
@@ -101,23 +111,32 @@
         });
     });
 
-    app.get('/u/:postid', function(req, res) {
+    app.get('/u/:postid', function(req, res, next) {
         var id = req.params.postid;
         Post.findById(id, function(err, posts) {
-            console.log(posts);
+            
+           
+            
+            if (posts == undefined) {
+                res.redirect('/postDoesntExist');
+            }
+            if (posts!= undefined) {
             User.findById(posts.owner, function(err, user) {
+
                 res.json(user);
             });
+        }
+            
    });
     });
 
 //Post upvotes ------------------------------------------------------>
    app.put('/posts/:upvote/upvote', isLoggedIn, function(req, res) {
      var id = req.params.upvote;
-     console.log(req.user.local.upvotedP);
+     
      if(contains(req.user.local.upvotedP, id)) {
         req.user.save();
-        console.log("This has already been upvoted!");
+        
      Post.findById(id, function(err, posts) {
         posts.downvote(function(err, post) {
         var uid = posts.owner;
@@ -130,7 +149,7 @@
      });
     }
     else {
-        console.log("First time upvoting!");
+        
         Post.findById(id, function(err, posts) {
         posts.upvote(function(err, post) {
         
@@ -153,10 +172,10 @@
     //Comment upvotes ------------------------------------------------------>
     app.put('/comments/:upvote/upvote', isLoggedIn, function (req, res) {
         var id = req.params.upvote;
-        console.log(req.user.local.upvotedC);
+        
         if (contains(req.user.local.upvotedC, id)) {
             req.user.save();
-            console.log("This has already been upvoted!");
+            
             Comment.findById(id, function (err, comments) {
                 comments.downvote(function (err, comment) {
                     var uid = comments.owner;
@@ -169,7 +188,7 @@
             });
         }
         else {
-            console.log("First time upvoting!");
+            
             Comment.findById(id, function (err, comments) {
                 comments.upvote(function (err, comment) {
                     User.findById(comments.owner, function (err, users) {
@@ -192,7 +211,7 @@
         var id = req.params.downvote;
         if (contains(req.user.local.downvotedC, id)) {
             req.user.save();
-            console.log("This has already been downvoted");
+            
             Comment.findById(id, function (err, comments) {
                 comments.upvote(function (comment, err) {
                     var uid = comments.owner;
@@ -205,7 +224,7 @@
             });
         }
         else {
-            console.log("First time downvoting");
+            
             Comment.findById(id, function (err, comments) {
                 comments.downvote(function (comment, err) {
                     var uid = comments.owner;
@@ -230,7 +249,7 @@
      var id = req.params.downvote;
      if(contains(req.user.local.downvotedP, id)) {
         req.user.save();
-        console.log("This has already been downvoted");
+        
      Post.findById(id, function(err, posts) {
         posts.upvote(function(post, err) {
         var uid = posts.owner;
@@ -243,7 +262,7 @@
      });
     }
     else {
-        console.log("First time downvoting");
+        
         Post.findById(id, function(err, posts) {
         posts.downvote(function(post, err) {
         var uid = posts.owner;
@@ -266,6 +285,7 @@
 //Post downvotes ---------------------------------------------------->
 
  app.get('/posts/:posts', function(req, res) {
+    
     res.render('comments.ejs', { user     : req.user});
 });
 
@@ -286,9 +306,9 @@
 
 app.get('/posts/:posts/getPost/comments', function(req, res) {
 var id = req.params.posts;
- Post.findById(id).deepPopulate('comments.comments.comments.comments.comments.comments').execAsync() //i am looking for a form, using deeppopulate funct we fill out subforms to the 6th level, because I don't think there will be more than 6 levels, and if so we can just add in more..
+ Post.findById(id).deepPopulate('comments' + longpath).execAsync() //i am looking for a form, using deeppopulate funct we fill out subforms to the 6th level, because I don't think there will be more than 6 levels, and if so we can just add in more..
         .then(function (doc) { //for the doc that the async call gets
-             console.log(doc);
+             
             res.json(doc); //we send that doc with the populated fields  
         }).catch(function (err) { //if there is a error than tell us
             res.send('Something is wrong..' + err.message) //err.message holds true error, might be vague
@@ -326,7 +346,7 @@ app.get('/userComments/:user', function(req, res) {
 app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
     var id = req.params.postid;
     var comments = new Comment();
-    console.log(req.user);
+   
     var myDate = Date();
     var author = req.user.local.email;
     var owner = req.user;
@@ -339,12 +359,16 @@ app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
     req.user.local.comments.push(comments);
     req.user.save();
     Post.findById(id, function(err, post){
+        if (post!=null) {
         comments.post = post;
             post.comments.push(comments);
             post.allComments = post.allComments + 1;
         post.save();
         comments.save();
+    }
+
     });
+
     res.json(req.body);
 });
     //edit post
@@ -410,7 +434,7 @@ app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
         }
     });
     app.post('/posts/:id', isLoggedIn, function (req, res) {
-        console.log(req.body);
+
         var id = req.params.id;
         var comments = new Comment();
         var myDate = Date();
@@ -423,25 +447,64 @@ app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
         comments.body = req.body.body;
         comments.pComment = req.body.parentCommentId;
         Post.findById(id, function (err, post) {
+            if (post != null) {
             post.allComments = post.allComments + 1;
-            post.save();
+            
             req.user.local.comments.push(comments);
             req.user.save();
             comments.post = post;
             Comment.findById(req.body.parentCommentId, function (err, comm) {
+            if(comm != null) {
                 comments.nthNode = comm.nthNode + 1;
                 comments.save();
                 comm.comments.push(comments); //pushing in nested comment to parent
                 comm.save();
+                post.save();
+                }
             });
            
-            
+         }
+               
         });
 
         res.redirect('/posts/' + id);
     });
   
+    app.put('/posts/delete/:user/:id', isLoggedIn, function(req, res) {
+        var postid = req.params.id;
+        var userid = req.params.user;
+        if(req.user._id != userid) {
+            res.redirect('/');
+        }
 
+        Post.findByIdAndRemove(postid, function(err) {
+            if(err) throw err;
+         
+            res.redirect('/');
+        });
+    });
+
+    //removing post
+    app.put('/post/:postid/comment/delete/:user/:id',isLoggedIn, function(req, res) {
+        var postid = req.params.postid;
+        var commentid = req.params.id;
+        var userid = req.params.user;
+        if(req.user._id != userid) {
+            res.redirect('/posts/' + postid);
+        }
+        //removing comment, subcomments
+
+        Comment.findByIdAndRemove(commentid, function(err) {
+            if(err) throw err;
+  
+         Post.findById(postid, function(err, post) {
+            if(err) throw err;
+            post.allComments = post.allComments - 1;
+            post.save();
+         });
+        res.redirect('/posts/' + postid);
+        });
+    });
 }; 
 
 
@@ -458,15 +521,24 @@ function isLoggedIn(req, res, next) {
 function contains(arr, id) {
     for (var i = 0; i < arr.length; i++) {
        
-        console.log(arr);
+        
         if (arr[i] == id) {
-            console.log("splicing!");
-            console.log(arr[i]);
+            
             arr.splice(i, 1);
-            console.log(arr);
+            
             return true;
         }
     }
-    console.log('coming back false');
+    
     return false;
+}
+//credit to disfated@stackoverflow sick algorithm for joinign strings
+function repeat(pattern, count) {
+    if (count < 1) return '';
+    var result = '';
+    while (count > 1) {
+        if (count & 1) result += pattern;
+        count >>= 1, pattern += pattern;
+    }
+    return result + pattern;
 }

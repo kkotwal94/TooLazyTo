@@ -8,7 +8,7 @@ var name;
 var href;
 var finalData = [];
 var d_id;
-var uid;
+//var uid;
 var counter = 0;
 console.log(sub);
 
@@ -72,8 +72,8 @@ var CommentFiller = React.createClass({
             dataType: 'json',
             success: function(data) {
 			   
-               this.setState({currentuser:data.local});
-			  uid = data._id;
+               this.setState({currentuser:data.local, userid : data});
+			         //uid = data._id;
             }.bind(this),
         error: function(xhr, status, err) {
                console.error(this.props.url,status, err.toString());
@@ -110,7 +110,8 @@ var CommentFiller = React.createClass({
           post: [],
           user: [],
           comments: [],
-		  currentuser : []
+		  currentuser : [],
+      userid : []
           
        }
     },
@@ -135,7 +136,7 @@ var CommentFiller = React.createClass({
              <CreateComment onCommentSubmit={this.handleCommentSubmit} />
             </div>
             
-            <CommentList comments = {this.state.comments} user = {this.state.currentuser}/>
+            <CommentList comments = {this.state.comments} user = {this.state.currentuser} userid = {this.state.userid}/>
             </div>
            
             
@@ -155,12 +156,15 @@ var CommentList = React.createClass({ //has to be called list
 		 
     var upvoted = this.props.user.upvotedC;
 	var downvoted = this.props.user.downvotedC;
-	var userComments = this.props.user.comments;
+	var userComment = this.props.user.comments;
+  var uid = this.props.userid._id;
 	/*var uid = this.props.user._id;*/
 	var self = this;
-
+var small = {
+    fontSize: '10px'
+  }
       return( 
-	
+
 		  <div className = "total">
           <ul className = "list-unstyled">
 		  {
@@ -174,16 +178,23 @@ var CommentList = React.createClass({ //has to be called list
 	    color: downvoted.indexOf(comment._id) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
 	  }
 	  }
-	
+
+    var parentDiv = "#" + comment.pComment;
+    var childDiv = "#" + comment._id;
+
 	 var tag = "#upvote" + comment._id;
 	 var tag2 = "#downvote" + comment._id;
 	 var tag3 = "#numbah" + comment._id;
 	var tracker = comment.upvotes;
-	
+	 
+      
+      
+      
 		 
 		 if(upvoted!= undefined) {
 		  var edit = {
-	     display: userComments.indexOf(comment._id) > -1 ? '' : 'None'
+	     display: userComment.indexOf(comment._id) > -1 ? '' : 'None',
+       fontSize: '10px'
 	   }
 	  }
 	  else {
@@ -233,7 +244,7 @@ var CommentList = React.createClass({ //has to be called list
             $(tag).css('color', 'rgb(0, 255, 0)');
             $(tag2).css('color', 'rgb(64, 77, 91)');
 			tracker = tracker + 2;
-            $(tag3).text(tracker);
+            $(tag3).text(tracker + " points");
             console.log("Hits");
 			
 			console.log(tracker);
@@ -257,7 +268,7 @@ var CommentList = React.createClass({ //has to be called list
 			   $(tag2).css('color', 'rgb(64, 77, 91)');
 			   tracker = tracker + 1;
 			   console.log(tracker);
-			  $(tag3).text(tracker);
+			  $(tag3).text(tracker+ " points");
 			  
 			  console.log("Hit");
 			  
@@ -273,7 +284,7 @@ var CommentList = React.createClass({ //has to be called list
          console.log(color2);
 		 tracker = tracker - 1;
 		 console.log(tracker);
-			    $(tag3).text(tracker);
+			    $(tag3).text(tracker+ " points");
 				
 			  }
               
@@ -314,7 +325,7 @@ var CommentList = React.createClass({ //has to be called list
             $(tag2).css('color', 'rgb(255, 0, 0)');
             $(tag).css('color', 'rgb(64, 77, 91)');
             tracker = tracker - 2;
-			$(tag3).text(tracker);
+			$(tag3).text(tracker+ " points");
 			console.log(tracker);
             console.log("Hits");
 
@@ -338,7 +349,7 @@ var CommentList = React.createClass({ //has to be called list
          $(tag2).css('color', 'rgb(255, 0, 0)');
         tracker = tracker - 1;
 		console.log(tracker);
-		$(tag3).text(tracker);
+		$(tag3).text(tracker+ " points");
         console.log("Hit");
         }
       }
@@ -348,7 +359,7 @@ var CommentList = React.createClass({ //has to be called list
 			   $(tag2).css('color', "rgb(64, 77, 91)");
 			   tracker = tracker + 1;
 				console.log(tracker);
-			   $(tag3).text(tracker);
+			   $(tag3).text(tracker+ " points");
 			  }
 			  
             }.bind(this),
@@ -364,9 +375,36 @@ var CommentList = React.createClass({ //has to be called list
 
 			
 			
-			></span>&nbsp;<a  role="button" data-toggle="collapse" href={"#collapseExample" + comment._id} aria-expanded="false" aria-controls="collapseExample">
+			></span>&nbsp;<a  style = {small} role="button" data-toggle="collapse" href={"#collapseExample" + comment._id} aria-expanded="false" aria-controls="collapseExample">
   Reply
-</a>&nbsp;<span style = {edit}><a href ={'/editC/' + uid + '/' + comment._id }>Edit Comment</a></span></li>
+</a>&nbsp;<span style = {edit}><a href ={'/editC/' + uid + '/' + comment._id }>Edit Comment</a>&nbsp; <a onClick = {
+  function(event){
+    var x = confirm("Are you sure you want to delete this post?");
+          if(x == true) {
+            
+            $.ajax({
+            url:  '/post/' + sub + '/comment/delete/' +uid+"/"+ comment._id ,
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              console.log("We got comment deleted?");
+
+
+          }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+          
+            
+
+          }
+
+          else {
+            alert("Guess we wont then");
+          }
+         }}
+    >Delete Comment</a></span></li>
 			<div className="collapse" id={"collapseExample" + comment._id}>
 			<div id = "reply">
 			<form   method = "post" id = "contactForm">
@@ -389,6 +427,8 @@ var CommentList = React.createClass({ //has to be called list
 			
 			})
 			}
+
+
               </ul>
 			  </div>
         )
@@ -546,8 +586,3 @@ alert("hit");
 		  */
 
 
-function divAppend () {
-var div1 = comment.pComment;
-var div2 = comment._id;
-div1.appendChild(div2);
-}

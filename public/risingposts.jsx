@@ -115,8 +115,8 @@ console.log(updatedList);
             <div className = "PostFiller">
             
             <div className="form-group">
-				<button for="collapseFive" className="btn btn-default" data-toggle="collapse" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">SEARCH!</button>
-					<div id="collapseFive" className="collapse">
+				<button for="collapseEight" className="btn btn-default" data-toggle="collapse" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">SEARCH!</button>
+					<div id="collapseEight" className="collapse">
 					<span className="input input--hoshi">
 					<input className="input__field input__field--hoshi" type="text" id="input-4" onChange = {this.authorList}/>
 					<label className="input__label input__label--hoshi input__label--hoshi-color-1" for="input-4">
@@ -539,3 +539,36 @@ if( a.date  < b.date) return -1;
 if (a.date > b.date) return 1;
 return 0;
 }
+(function() {
+        // trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+        if (!String.prototype.trim) {
+          (function() {
+            // Make sure we trim BOM and NBSP
+            var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+            String.prototype.trim = function() {
+              return this.replace(rtrim, '');
+            };
+          })();
+        }
+
+        [].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
+          // in case the input is already filled..
+          if( inputEl.value.trim() !== '' ) {
+            classie.add( inputEl.parentNode, 'input--filled' );
+          }
+
+          // events:
+          inputEl.addEventListener( 'focus', onInputFocus );
+          inputEl.addEventListener( 'blur', onInputBlur );
+        } );
+
+        function onInputFocus( ev ) {
+          classie.add( ev.target.parentNode, 'input--filled' );
+        }
+
+        function onInputBlur( ev ) {
+          if( ev.target.value.trim() === '' ) {
+            classie.remove( ev.target.parentNode, 'input--filled' );
+          }
+        }
+      })();
