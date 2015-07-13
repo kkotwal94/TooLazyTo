@@ -53,13 +53,17 @@ var CommentFiller = React.createClass({
                }
              }
 			
-			 
+			         
                 treeCycle(data);
+                //console.log(data);
                 data = finalData;
+                //console.log(finalData[2]);
+                
                
                
                this.setState({comments:data});
-               
+               //childrenCounter(finalData[1]);
+               //console.log(childCounter);
             }.bind(this),
         error: function(xhr, status, err) {
                console.error(this.props.url,status, err.toString());
@@ -186,23 +190,25 @@ var small = {
 	 var tag2 = "#downvote" + comment._id;
 	 var tag3 = "#numbah" + comment._id;
 	var tracker = comment.upvotes;
-	 
+	 var userlink = "/user/" + comment.owner;
       
       
       
 		 
-		 if(upvoted!= undefined) {
+		 if(upvoted!= undefined && comment.body != "[deleted]") {
 		  var edit = {
 	     display: userComment.indexOf(comment._id) > -1 ? '' : 'None',
        fontSize: '10px'
 	   }
 	  }
 	  else {
-	  
+	    userlink = "";
 	   var edit = {
 	     display: 'None'
 	  }
 	  }
+
+
 		 
 		 //editor1 = AlloyEditor.editable('ckedit' + comment._id);
 		 
@@ -212,7 +218,7 @@ var small = {
 			
 			<div id = {comment._id}>
 			<div className = {"childs" + comment.nthNode} style = {{paddingLeft: 3*comment.nthNode + 'em'}}>
-            <li><a href={"/user/" +comment.owner}><strong>{comment.author}</strong></a> <span id = {"numbah" + comment._id}>{comment.upvotes+" points"}</span> Posted on {comment.date} <a style = {{fontSize: 0.5 + "em"}}
+            <li><a href={userlink}><strong>{comment.author}</strong></a> <span id = {"numbah" + comment._id}>{comment.upvotes+" points"}</span> Posted on {comment.date} <a style = {{fontSize: 0.5 + "em"}}
 			>(<span className = "glyphicon glyphicon-minus"></span>)</a></li>
 			
 			
@@ -389,9 +395,10 @@ var small = {
             success: function(data) {
               console.log("We got comment deleted?");
 
-
+              window.location.href = window.location.href;
           }.bind(this),
         error: function(xhr, status, err) {
+                window.location.href = window.location.href;
                console.error(this.props.url,status, err.toString());
             }.bind(this)
         });
@@ -486,8 +493,26 @@ function treeCycle(data) {
     }
 //console.log(finalData);    
 }
+var childCounter = 1;
 
-
+function childrenCounter(data) {
+    
+    console.log(data);
+    if(data.comments.length != 0)
+    for(var x = 0; x < data.comments.length; x++)
+    {
+    
+        finalData.push(data.comments[x]);
+        childCounter = childCounter + 1;
+        console.log("childrenCounter: " + childCounter);
+        console.log(data.comments[x].comments);
+        if(data.comments[x].comments.length != 0) {
+           console.log("Hit tree if statement");
+           childrenCounter(data.comments[x]);
+        }
+    }
+//console.log(finalData);    
+}
 
 $(document).ready(function () {
 		AlloyEditor.editable('commenter', {
@@ -547,10 +572,7 @@ $(document).ready(function () {
     
 });
 
-$('#contactForm').submit(function() {
-alert("hit");
- return false;
-});
+
 
 
 /*Original jsx attempt at tree collapses*/

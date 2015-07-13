@@ -1,5 +1,5 @@
 ﻿var mongoose = require('mongoose');
-
+var deepPopulate = require('mongoose-deep-populate');
 var CommentSchema = new mongoose.Schema( {
     body      : String,
     author    : String,
@@ -23,6 +23,6 @@ CommentSchema.methods.downvote = function (cb) {
     this.upvotes -= 1;
     this.save(cb);
 };
-
+CommentSchema.plugin(deepPopulate);
 var Comment = mongoose.model('Comment', CommentSchema, 'Comment');
 module.exports = Comment;

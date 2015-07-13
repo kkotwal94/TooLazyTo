@@ -194,7 +194,8 @@ var List2 = React.createClass({ //has to be called list
 	    color: downvoted.indexOf(post._id) > -1 ? 'rgb(255, 0, 0)' : 'rgb(64, 77, 91)'
 	  }
 	  var edit = {
-	     display: myposts.indexOf(post._id) > -1 ? '' : 'None'
+	     display: myposts.indexOf(post._id) > -1 ? '' : 'None',
+	   	 fontSize: '10px'
 	   }
 	  }
 	  else {
@@ -499,7 +500,36 @@ $.ajax({
 
 ></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()} <a href = {"/edit/" +uid +"/"+post._id} id = {"edit" + post._id} style = {edit}>Edit</a></p>
+         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()} <a href = {"/edit/" +uid +"/"+post._id} id = {"edit" + post._id} style = {edit}>Edit</a>&nbsp;
+         <a className = "tryingtohide"  id = {"delete" + post._id} style = {edit} onClick = 
+         {function(event) {
+          var x = confirm("Are you sure you want to delete this post?");
+          if(x == true) {
+            
+            $.ajax({
+            url:  '/posts/delete/' +uid+"/"+ post._id ,
+            dataType: 'json',
+            type: 'PUT',
+            success: function(data) {
+              console.log("We got post deleted?");
+
+
+          }.bind(this),
+        error: function(xhr, status, err) {
+               console.error(this.props.url,status, err.toString());
+            }.bind(this)
+        });
+          
+            window.location.href = window.location.href;
+
+          }
+
+          else {
+            alert("Guess we wont then");
+          }
+         }}
+
+          >Delete</a></p>
           </li>
 </div>
          )

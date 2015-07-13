@@ -138,6 +138,10 @@
         req.user.save();
         
      Post.findById(id, function(err, posts) {
+        if (posts == null) {
+            res.json(posts);
+        }
+        else {
         posts.downvote(function(err, post) {
         var uid = posts.owner;
         User.findById(uid, function(err, users) {
@@ -146,11 +150,16 @@
             res.json(posts);
         });
     });
+    }
      });
     }
     else {
         
         Post.findById(id, function(err, posts) {
+            if(posts == null) {
+                res.json(posts);
+            }
+            else {
         posts.upvote(function(err, post) {
         
         
@@ -162,7 +171,9 @@
             res.json(posts);
         });
     });
+    }
      });
+
     }
 
     
@@ -177,6 +188,10 @@
             req.user.save();
             
             Comment.findById(id, function (err, comments) {
+                if (comments == null) {
+                    res.json(comments);
+                }
+                else {
                 comments.downvote(function (err, comment) {
                     var uid = comments.owner;
                     User.findById(uid, function (err, users) {
@@ -185,11 +200,16 @@
                         res.json(comments);
                     });
                 });
+            }
             });
         }
         else {
             
             Comment.findById(id, function (err, comments) {
+                if(comments == null) {
+                    res.json(comments);
+                }
+                else {
                 comments.upvote(function (err, comment) {
                     User.findById(comments.owner, function (err, users) {
                         users.local.upvotes = users.local.upvotes + 1;
@@ -199,6 +219,7 @@
                         res.json(comments);
                     });
                 });
+            }
             });
         }
 
@@ -213,6 +234,10 @@
             req.user.save();
             
             Comment.findById(id, function (err, comments) {
+                if (comments == null) {
+                    res.json(comments);
+                }
+                else {
                 comments.upvote(function (comment, err) {
                     var uid = comments.owner;
                     User.findById(uid, function (err, users) {
@@ -221,11 +246,16 @@
                         res.json(comments);
                     });
                 });
+            }
             });
         }
         else {
             
             Comment.findById(id, function (err, comments) {
+                if (comments == null) {
+                    res.json(comments);
+                }
+                else {
                 comments.downvote(function (comment, err) {
                     var uid = comments.owner;
                     User.findById(uid, function (err, users) {
@@ -236,6 +266,7 @@
                         res.json(comments);
                     });
                 });
+            }
             });
         }
 
@@ -249,8 +280,12 @@
      var id = req.params.downvote;
      if(contains(req.user.local.downvotedP, id)) {
         req.user.save();
-        
+     
      Post.findById(id, function(err, posts) {
+        if(posts == null) {
+            res.json(posts);
+        }
+        else {
         posts.upvote(function(post, err) {
         var uid = posts.owner;
         User.findById(uid, function(err, users) {
@@ -259,11 +294,16 @@
             res.json(posts);
         });
       });
+    }
      });
     }
     else {
         
         Post.findById(id, function(err, posts) {
+            if(posts == null) {
+                res.json(posts);
+            }
+            else {
         posts.downvote(function(post, err) {
         var uid = posts.owner;
         User.findById(uid, function(err, users) {
@@ -274,6 +314,7 @@
             res.json(posts);
         });
     });
+    }
      });
     }
 
@@ -494,15 +535,35 @@ app.post('/submit/:postid/comments',isLoggedIn, function(req, res) {
         }
         //removing comment, subcomments
 
-        Comment.findByIdAndRemove(commentid, function(err) {
+        Comment.findById(commentid, function(err, comm) {
             if(err) throw err;
+            if(comm.comments.length == 0) {
+                comm.remove(function(err) {
+                    if(err) throw err;
+                    res.redirect('/posts/' + postid);
+
+                    Post.findById(postid, function(err, post) {
+                        if(err) throw err;
+                        post.allComments = post.allComments - 1;
+                        post.save();
+            
+                        });
+                    res.redirect('/posts/' + postid);
+                    });
+                }
+            else {
+            comm.body = "[deleted]";
+            comm.author = "[deleted]";
+            
   
          Post.findById(postid, function(err, post) {
             if(err) throw err;
             post.allComments = post.allComments - 1;
             post.save();
+            comm.save();
          });
         res.redirect('/posts/' + postid);
+    }
         });
     });
 }; 
