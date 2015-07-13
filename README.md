@@ -14,7 +14,6 @@ Original Project : https://github.com/keithyong/too-lazy
 * Incorporate alloy editor for each text area that is opened up, therefore having multiple alloyeditors
 * Potential subreddits, I don't know doesn't seem worth it?
 * Finish comment tree collapse for comments (idea is close)
-* Make sure that comment count is correct after deletion of comments
 * Pagination for when too many entries(of posts) exist
 
 
