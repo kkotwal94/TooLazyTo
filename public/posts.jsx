@@ -61,7 +61,85 @@ console.log(updatedList);
              }
    
                
-               console.log(data);
+              for (var x = 0; x < data.length; x++) {
+                  var currentTime = new Date();
+              		
+                  var date = new Date(data[x].date);
+              	 
+                  if(currentTime.getFullYear() - date.getFullYear() < 1) {
+                    if (currentTime.getMonth() - date.getMonth() < 1) {
+                      if(currentTime.getDate() - date.getDate() < 1) {
+                        if(currentTime.getHours() - date.getHours() < 1){
+                          if(currentTime.getMinutes() - date.getMinutes() < 1){
+                            if(currentTime.getSeconds() - date.getSeconds() <1) {
+
+                            }
+                            else {
+                              data[x].date = currentTime.getSeconds() - date.getSeconds() + " seconds ago";
+                            }
+                        }
+                          else {
+                            var time = (currentTime.getMinutes() - date.getMinutes());
+                            if (time == 1) {
+                              var str = " minute ago";
+                            }
+                            else {
+                              var str = " minutes ago";
+                            }
+                            data[x].date = time + str;
+                          }
+                      }
+                        else {
+                         var time = (currentTime.getHours() - date.getHours());
+                            if (time == 1) {
+                              var str = " hour ago";
+                            }
+                            else {
+                              var str = " hours ago";
+                            }
+                            data[x].date = time + str;
+                         
+                        }
+                      }
+                      else {
+                        var time = (currentTime.getDate() - date.getDate());
+                            if (time == 1) {
+                              var str = " day ago";
+                            }
+                            else {
+                              var str = " days ago";
+                            }
+                            data[x].date = time + str;
+                      }
+                    }
+                    else {
+                      var time = (currentTime.getMonth() - date.getMonth());
+                            if (time == 1) {
+                              var str = " month ago";
+                            }
+                            else {
+                              var str = " months ago";
+                            }
+                            data[x].date = time + str;
+                    }
+                  }
+
+                  else {
+                    var time = (currentTime.getFullYear() - date.getFullYear());
+                            if (time == 1) {
+                              var str = " year ago";
+                            }
+                            else {
+                              var str = " years ago";
+                            }
+                            data[x].date = time + str;
+                  }
+                }
+
+
+
+
+
                this.setState({posts:data, items:data});
                
             }.bind(this),
@@ -506,7 +584,7 @@ console.log(post._id);
 
 ></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} on: {new Date(post.date).toUTCString()} <a className = "tryingtohide" href = {"/edit/" +uid +"/"+post._id} id = {"edit" + post._id} style = {edit}>Edit</a> &nbsp;
+         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} <span><em>{post.date}</em></span> <a className = "tryingtohide" href = {"/edit/" +uid +"/"+post._id} id = {"edit" + post._id} style = {edit}>Edit</a> &nbsp;
          <a className = "tryingtohide"  id = {"delete" + post._id} style = {edit} onClick = 
          {function(event) {
           var x = confirm("Are you sure you want to delete this post?");

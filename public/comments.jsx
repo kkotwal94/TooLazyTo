@@ -53,10 +53,88 @@ var CommentFiller = React.createClass({
                }
              }
 			
-			         
-                treeCycle(data);
+			          
+                treeCycle(data, "Root");
+
+
+
                 //console.log(data);
                 data = finalData;
+
+                for (var x = 0; x < data.length; x++) {
+                  var currentTime = new Date();
+              
+                  var date = new Date(data[x].date);
+              
+                  if(currentTime.getFullYear() - date.getFullYear() < 1) {
+                    if (currentTime.getMonth() - date.getMonth() < 1) {
+                      if(currentTime.getDate() - date.getDate() < 1) {
+                        if(currentTime.getHours() - date.getHours() < 1){
+                          if(currentTime.getMinutes() - date.getMinutes() < 1){
+                            if(currentTime.getSeconds() - date.getSeconds() <1) {
+
+                            }
+                            else {
+                              data[x].date = currentTime.getSeconds() - date.getSeconds() + " seconds ago";
+                            }
+                        }
+                          else {
+                            var time = (currentTime.getMinutes() - date.getMinutes());
+                            if (time == 1) {
+                              var str = " minute ago";
+                            }
+                            else {
+                              var str = " minutes ago";
+                            }
+                            data[x].date = time + str;
+                          }
+                      }
+                        else {
+                         var time = (currentTime.getHours() - date.getHours());
+                            if (time == 1) {
+                              var str = " hour ago";
+                            }
+                            else {
+                              var str = " hours ago";
+                            }
+                            data[x].date = time + str;
+                         
+                        }
+                      }
+                      else {
+                        var time = (currentTime.getDate() - date.getDate());
+                            if (time == 1) {
+                              var str = " day ago";
+                            }
+                            else {
+                              var str = " days ago";
+                            }
+                            data[x].date = time + str;
+                      }
+                    }
+                    else {
+                      var time = (currentTime.getMonth() - date.getMonth());
+                            if (time == 1) {
+                              var str = " month ago";
+                            }
+                            else {
+                              var str = " months ago";
+                            }
+                            data[x].date = time + str;
+                    }
+                  }
+
+                  else {
+                    var time = (currentTime.getFullYear() - date.getFullYear());
+                            if (time == 1) {
+                              var str = " year ago";
+                            }
+                            else {
+                              var str = " years ago";
+                            }
+                            data[x].date = time + str;
+                  }
+                }
                 //console.log(finalData[2]);
                 
                
@@ -185,7 +263,10 @@ var small = {
 
     var parentDiv = "#" + comment.pComment;
     var childDiv = "#" + comment._id;
-
+    var superDiv = "." + comment._id;
+    var omegaDiv = "#hello" + comment._id;
+    var betaCheck = "#icon" + comment._id;
+    var collapseCount = false;
 	 var tag = "#upvote" + comment._id;
 	 var tag2 = "#downvote" + comment._id;
 	 var tag3 = "#numbah" + comment._id;
@@ -217,11 +298,33 @@ var small = {
 			<div className = "userComments">
 			
 			<div id = {comment._id}>
+      <div className = {comment.pComment}>
 			<div className = {"childs" + comment.nthNode} style = {{paddingLeft: 3*comment.nthNode + 'em'}}>
-            <li><a href={userlink}><strong>{comment.author}</strong></a> <span id = {"numbah" + comment._id}>{comment.upvotes+" points"}</span> Posted on {comment.date} <a style = {{fontSize: 0.5 + "em"}}
-			>(<span className = "glyphicon glyphicon-minus"></span>)</a></li>
+            <li><a style = {{fontSize: 0.5 + "em"}}
+      >[<span id = {"icon"+comment._id} className = "glyphicon glyphicon-minus" onClick =
+        {function(event){
+          if(collapseCount == false) {
+          $(superDiv).hide();
+          $(omegaDiv).hide();
+         console.log(superDiv);
+         $(betaCheck).addClass('glyphicon-plus').removeClass('glyphicon-minus');
+         collapseCount = true;
+        }
+      
+
+      else {
+        $(superDiv).show();
+          $(omegaDiv).show();
+         console.log(superDiv);
+         $(betaCheck).addClass('glyphicon-minus').removeClass('glyphicon-plus');
+         collapseCount = false;
+        }
+      }}
+
+        ></span>]</a>&nbsp;<a href={userlink}><strong>{comment.author}</strong></a> <span id = {"numbah" + comment._id}>{comment.upvotes+" points"}</span> <em>{comment.date}</em> 
+            </li>
 			
-			
+			<div id = {"hello" + comment._id}>
 			<li><div dangerouslySetInnerHTML={{__html : comment.body }} /></li>
 			<li><span style = {style} id = {"upvote" + comment._id} className = "glyphicon glyphicon-chevron-up" 
 			onClick =
@@ -424,10 +527,11 @@ var small = {
 			Save</button>
 			</form>
 			</div>
-			
 			</div>
 			</div>
 			</div>
+			</div>
+      </div>
 			</div>
 			)
 			
@@ -479,16 +583,18 @@ var CreateComment = React.createClass({
 React.render(<CommentFiller />,
 document.getElementById('comments'));
 
-function treeCycle(data) {
+function treeCycle(data, id) {
     
-   
+        
     if(data.comments.length != 0)
     for(var x = 0; x < data.comments.length; x++)
     {
-		
+        //id = data.comments[x]._id;
+		    data.comments[x].pComment = id + " " + data.comments[x].pComment ;
+        id = data.comments[x].pComment;
         finalData.push(data.comments[x]);
         if(data.comments[x].comments.length != 0) {
-           treeCycle(data.comments[x]);
+           treeCycle(data.comments[x], id);
         }
     }
 //console.log(finalData);    

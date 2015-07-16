@@ -322,7 +322,7 @@ onClick =
           <div dangerouslySetInnerHTML={{__html : j }} />
           </div>
           <div className = "panel panel-footer">
-          <a href = {href}>View : {name}s profile</a> or <a>Give this user some Karma</a> <span style = {edit}>Since this is your post: <a href = {'/edit/' + realhref + '/' + posts._id} >Edit Post</a></span>
+          <a href = {href}>View : {name}s profile</a> <span style = {edit}>Since this is your post: <a href = {'/edit/' + realhref + '/' + posts._id} >Edit Post</a></span>
           </div>
           </div>
 </div>
