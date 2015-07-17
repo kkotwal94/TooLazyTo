@@ -47,7 +47,7 @@
 
 .ae-ui .ae-has-dropdown {
   display: block;
-  float: left \9;
+  float: left;
   width: 24px; }
 
 .ae-ui IE10-PLUS::-ms-reveal, .ae-ui [class^=ae-toolbar] {
@@ -57,8 +57,8 @@
 .ae-ui .ae-toolbar, .ae-ui [class^=ae-toolbar-] {
   line-height: 1;
   padding: 10px;
-  position: absolute;
-  margin-top : -350px;
+  position: relative;
+  margin-top : -625px;
   margin-left: -600px;
   float: left;
  }
