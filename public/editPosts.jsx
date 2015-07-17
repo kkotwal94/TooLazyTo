@@ -4,8 +4,7 @@ var sub = "/edit/" +array[array.length-2] + "/" + array[array.length-1];
 var dub = array[array.length-1];
 console.log(dub);
 console.log(sub);
-var name;
-var href;
+
 var EditProfile = React.createClass({
 loadUserFromServer : function() {
 	$.ajax({
@@ -14,7 +13,7 @@ loadUserFromServer : function() {
 		dataType: 'json',
 		success: function(data) {
 			console.log(data);
-			this.setState({users: data.local});
+			this.setState({users: data.local, currentUser:data });
 			
 			
 		}.bind(this),
@@ -45,6 +44,7 @@ getInitialState: function() {
     return {
 	 
 	  users: [],
+    currentUser :[],
 	  post:  []
 	};
 },
@@ -87,7 +87,7 @@ handlePSubmit : function(data,callback) {
 			<hr/>
 			<EditForm onSubmit={this.handlePSubmit} user = {this.state.users}/>
 			<hr/>
-			<EditViews user = {this.state.users} posts = {this.state.post}/>
+			<EditViews user = {this.state.users} posts = {this.state.post} currentUser = {this.state.currentUser}/>
 			
 
 			
@@ -150,6 +150,10 @@ var EditForm = React.createClass({
 	var pid = this.props.posts._id;
 	console.log("PID: " + pid);
     var user = this.props.user;
+    var username = this.props.user.email;
+    var userid1 = this.props.currentUser._id;
+    var userid = "/user/" + userid1
+
 	var uid = this.props.user._id;
     var upvoted = this.props.user.upvotedP;
 	var downvoted = this.props.user.downvotedP;
@@ -340,7 +344,7 @@ onClick =
           <div dangerouslySetInnerHTML={{__html : j }} />
           </div>
           <div className = "panel panel-footer">
-          <a href = {href}>View : {name}s profile</a> or <a>Give this user some Karma</a>
+          <a href = {userid}>View : {username}s profile</a> or <a>Give this user some Karma</a>
           </div>
           </div>
 </div>

@@ -245,8 +245,7 @@ var List4 = React.createClass({ //has to be called list
 	var downvoted = this.props.user.downvotedP;
 	var self = this;
 	var myposts = this.props.user.posts;
-	
-	 
+	var uids = '/user/' + uid;
   
     return(
 	<div>
@@ -569,7 +568,7 @@ console.log(post._id);
 
 ></span></div></div><li className ="inlinelist" key = {post._id}> <h4>{post.title}</h4>
 
-         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: {post.author} <span><em>{post.date}</em></span> <a href = {"/edit/" +uid +"/"+post._id} id = {"edit" + post._id} style = {edit}>Edit</a>&nbsp;
+         <p><a href = {'/posts/' + post._id} >{post.allComments} comments</a> Created By: <a href = {uids}>{post.author}</a> <span><em>{post.date}</em></span> <a href = {"/edit/" +uid +"/"+post._id} id = {"edit" + post._id} style = {edit}>Edit</a>&nbsp;
          <a className = "tryingtohide"  id = {"delete" + post._id} style = {edit} onClick = 
          {function(event) {
           var x = confirm("Are you sure you want to delete this post?");
